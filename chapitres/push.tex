@@ -1,22 +1,85 @@
-\section{Modélisation dynamique}~
-	\subsection{Problématique supplémentaire}
-	\subsection{Équations de la dynamique}
-	\subsection{Linéarisation et approximations}
-\section{Commande prédictive}~
-	\subsection{Choix du type d'optimisation}
-	\subsection{Formulation des objectifs}
-	\subsection{Formulation des contraintes}
-\section{Gestion des deux modèles dynamiques exclusifs}~
-	\subsection{Choix d'un superviseur et conséquences}
-	\subsection{Fonctionnement du superviseur}
-	\subsection{Fonctionnement de l'estimateur d'impact}
-\section{Résultats et expérimentations}~
-	\subsection{Protocole expérimental}
-	\subsection{Expérimentations}
-	\subsection{Limites physiques et algorithmiques}
-\section{Vers une modélisation unifiée des deux dynamiques}~
-	\subsection{Problème de complémentarité linéaire}
-	\subsection{Méthodes de résolution}
-		\subsubsection{Programmation quadratique avec contraintes non-linéaire}
-		\subsubsection{Linéarisation par \textit{apriori}}
-		\subsubsection{Conclusion}
+\section{Modélisation dynamique}
+\subsection{Problématiques supplémentaires}
+
+Parler du sous-actionnement
+Parler du changement de dynamique (ajout d'une variable)
+Parler des impacts
+
+\subsection{Équations de la dynamique}
+
+Présentation des nouvelles équations de la dynamique
+
+\subsection{Linéarisation et approximations}
+
+Considérer un approximation aux petits angles
+Considérer une hauteur constante du robot dans le repère robot
+Ne pas prendre en compte les moments des corps
+
+\section{Commande prédictive}
+\subsection{Modélisation de la dynamique future}
+
+Définir les variables
+Calculer la dynamique de l'angle.
+
+\subsection{Formulation des objectifs}
+
+Présenter les objectifs
+
+\subsection{Formulation des contraintes}
+
+Présenter les contraintes linéaires
+
+\section{Gestion des deux modèles dynamiques exclusifs}
+\subsection{Choix d'un superviseur et conséquences}
+
+Problématique de l'impact et de la phase d'atterrissage.
+Présentation du superviseur et de l'estimateur.
+
+\subsection{Fonctionnement du superviseur}
+
+Présenter la fsm
+
+\subsection{Fonctionnement de l'estimateur d'impact}
+
+Détailler les équations de calcul de la vitesse et du temps d'impact.\\
+Discuter de la validité du modèle.
+
+\section{Résultats et expérimentations}
+\subsection{Protocole expérimental}
+
+Différents push avec des balles.\\
+Importance du point d'impact (déplacement base / basculement).\\
+Parler de l'observation de l'angle de basculement.
+
+\subsection{Expérimentations}
+
+Analyser les expériences
+
+\subsection{Limites physiques et algorithmiques}
+
+Parler des limites en accélération/vitesse des roues.\\
+Parler du retard initial lié à l'observation et au superviseur.\\
+Parler des moments des bras
+
+
+\section{Vers une modélisation unifiée des deux dynamiques}
+\subsection{Problème de complémentarité linéaire}
+
+Présenter le problème complet.\\
+Problématique de la complémentarité linéaire.\\
+Nécessité d'un algorithme non-linéaire ou d'apriori.\\
+contrainte du temps de calcul.
+
+\subsection{Méthodes de résolution}
+\subsubsection{Programmation quadratique avec contraintes non-linéaire}
+
+Présentation des sqp
+
+\subsubsection{Linéarisation par \textit{a priori}}
+
+Choix qui parrait le plus pertinent (non rebond, variation non linéaire du temps d'impact)
+
+\subsubsection{Conclusion}
+
+Avantages et inconvénients d'une modélisation unifiée.\\
+Sensibilité du contrôleur à l'observation de l'angle.

@@ -1,21 +1,92 @@
-\section{Modélisation dynamique}~
-	\subsection{Choix du modèle et conséquences}
-	\subsection{Équations de la dynamique}
-	\subsection{Linéarisation et approximations}
-\section{Commande prédictive}~
-	\subsection{Modélisation de la dynamique future}
-	\subsection{Formulation du problème d'optimisation}
-		\subsubsection{Choix du type d'optimisation}
-		\subsubsection{Formulation des objectifs}
-		\subsubsection{Formulation des contraintes}
-\section{Méthode de résolution du problème}~
-	\subsection{Principe de la programmation quadratique}
-	\subsection{Application à la commande prédictive}
-		\subsubsection{Linéarisation des contraintes}
-		\subsubsection{Formulation mathématique finale}
-	\subsection{Implémentation logicielle : ``MPC-WalkGen''}
-\section{Résultats et expérimentations}~
-	\subsection{Protocole expérimental}
-	\subsection{De l'importance du choix des pondérations}
-	\subsection{Expérimentations}
-	\subsection{Vers un choix automatique des pondérations}
+\section{Modélisation dynamique}
+\subsection{Choix du modèle et conséquences}
+
+Parler des modèles n-corps. (Annexe A)
+Comparaisons entre ces modèles et le modèle corps complet.
+Choix entre complexité (nombre de variables) et fidélité avec le robot réel.
+Pertinence du modèle deux corps pour Pepper.
+
+\subsection{Équations de la dynamique}
+
+Détailler les équations de la dynamique.
+CoP pour synthétiser les forces de contact.
+Contraintes sur le CoP.
+Différences entre un modèle deux masses et un modèle une masse (moment pris en compte)
+
+\subsection{Linéarisation et approximations}
+
+Considérer mouvement horizontal.
+Négliger les moments de chaque corps (masse point).
+Considérer la gravité comme constante
+
+
+\section{Commande prédictive}
+\subsection{Modélisation de la dynamique future}
+
+Choix d'une dynamique polynomiale et de l'ordre de la dynamique.
+Détailler les équations.
+Ecrire l'équations du CoP
+
+
+\subsection{Formulation du problème d'optimisation}
+\subsubsection{Choix du type d'optimisation}
+
+Choix des variables
+minimiser une norme 2 sous contraintes
+Choix de résolution du multi objectif par pondération.
+
+\subsubsection{Formulation des objectifs}
+
+Détailler les différents objectifs
+
+\subsubsection{Formulation des contraintes}
+
+Détailler les différentes contraintes (sous la forme non linéaire)
+
+\section{Méthode de résolution du problème}
+\subsection{Principe de la programmation quadratique}
+
+Présenter la résolution de problème d'optimisation quadratique sous contrainte linéaire.
+Avantages et inconvénients.
+(Annexe B)
+
+\subsection{Application à la commande prédictive}
+\subsubsection{Linéarisation des contraintes}
+
+Linéariser les contraintes
+
+\subsubsection{Formulation mathématique finale}
+
+Ecrire l'équations.\\
+Parler des pondérations.\\
+conclure.
+
+\subsection{Schéma de contrôle}
+
+Présentation du schéma de contrôle: feedback en position / commande en vitesse cartésienne et positions articulaires et vitesse des roues.\\
+Parler des différents retards.\\
+Présentation de la méthode de compensation des retards (extrapolation).\\
+Parler de la compensation des jeux mécaniques (dead-zone).\\
+Réglage de la stabilité (\% de command-sensor).\\
+Vitesse des boucles de contrôle.\\
+asservissement bas niveau.
+
+\subsection{Implémentation logicielle : ``MPC-WalkGen''}
+
+Présenter mpc-walkgen
+
+\section{Résultats et expérimentations}
+\subsection{Protocole expérimental}
+
+Expériences de trajectoire non réalisable.\\
+Choix du sol.\\
+Choix des roues.
+
+\subsection{Expérimentations}
+
+Analyser les difféentes expériences
+
+\subsection{Vers un choix automatique des pondérations}
+
+Présenter l'inconvénient des pondérations fixes.\\
+Nécessité de méta-paramètres pour régler automatiquement les pondérations.
