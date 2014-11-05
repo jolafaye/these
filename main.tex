@@ -1,0 +1,108 @@
+\documentclass[12pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[OT1]{fontenc} 
+\usepackage{xspace}
+\usepackage[frenchb]{babel}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage[top=2in, bottom=1.5in, left=1in, right=1in]{geometry}
+
+\graphicspath{{images/}}
+\addtocounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+\bibliographystyle{plain}
+ 
+\begin{document}
+
+\newcommand\university{Université de Grenoble}
+\newcommand\school{École doctorale EEATS}
+\newcommand\structure{Laboratoire: Inria Grenoble Rhône-Alpes \\ Entreprise: Aldebaran}
+\newcommand\auteur{Jory Lafaye}
+\newcommand\encadrant{Dr. Pierre-Brice Wieber, Inria\\Dr. Cyrille Collette, Aldebaran\\Dr. Sebastien Dalibard, Aldebaran}
+\newcommand\directeur{Dr. Bernard Brogliato, Inria\\~\\~}
+\newcommand\titre{Commande des mouvements et de l'équilibre \\d'un robot humanoïde à roues omnidirectionnelles}
+
+\include{titre}
+
+\tableofcontents
+
+%
+\newpage\cite{bib.miasa.2010}
+%
+
+
+\addcontentsline{toc}{chapter}{Résumé}
+
+\chapter{Introduction}~
+	\section{Présentation de la plateforme expérimentale}
+		\subsection{Pepper, un robot humanoïde à roues omnidirectionnelles}
+		\subsection{Capteurs et actionneurs}
+		\subsection{Propriétés mécaniques}	
+	\section{État de l'art}
+		\subsection{Problématiques associées à Pepper}
+		\subsection{Commande et équilibre des robots à roues}
+			\subsubsection{Les robots à une et deux roues}
+			\subsubsection{Les robots à trois roues et plus}
+		\subsection{Commande et équilibre des robots bipèdes}
+		\subsection{Synthèse et conclusion}
+	\section{Organisation du document}
+\chapter{Modélisation et commande de Pepper}~
+	\section{Modélisation dynamique}
+		\subsection{Choix du modèle et conséquences}
+		\subsection{Équations de la dynamique}
+		\subsection{Linéarisation et approximations}
+	\section{Commande prédictive}
+		\subsection{Modélisation de la dynamique future}
+		\subsection{Formulation du problème d'optimisation}
+			\subsubsection{Choix du type d'optimisation}
+			\subsubsection{Formulation des objectifs}
+			\subsubsection{Formulation des contraintes}
+	\section{Méthode de résolution du problème}
+		\subsection{Principe de la programmation quadratique}
+		\subsection{Application à la commande prédictive}
+			\subsubsection{Linéarisation des contraintes}
+			\subsubsection{Formulation mathématique finale}
+		\subsection{Implémentation logicielle : ``MPC-WalkGen''}
+	\section{Résultats et expérimentations}
+		\subsection{Protocole expérimental}
+		\subsection{De l'importance du choix des pondérations}
+		\subsection{Expérimentations}
+		\subsection{Vers un choix automatique des pondérations}
+\chapter{Prise en compte du basculement de Pepper}~
+	\section{Modélisation dynamique}
+		\subsection{Problématique supplémentaire}
+		\subsection{Équations de la dynamique}
+		\subsection{Linéarisation et approximations}
+	\section{Commande prédictive}
+		\subsection{Choix du type d'optimisation}
+		\subsection{Formulation des objectifs}
+		\subsection{Formulation des contraintes}
+	\section{Gestion des deux modèles dynamiques exclusifs}
+		\subsection{Choix d'un superviseur et conséquences}
+		\subsection{Fonctionnement du superviseur}
+		\subsection{Fonctionnement de l'estimateur d'impact}
+	\section{Résultats et expérimentations}
+		\subsection{Protocole expérimental}
+		\subsection{Expérimentations}
+		\subsection{Limites physiques et algorithmiques}
+	\section{Vers une modélisation unifiée des deux dynamiques}
+		\subsection{Problème de complémentarité linéaire}
+		\subsection{Méthodes de résolution}
+			\subsubsection{Programmation quadratique avec contraintes non-linéaire}
+			\subsubsection{Linéarisation par \textit{apriori}}
+			\subsubsection{Conclusion}
+\chapter{Synthèse}
+	\section{Contributions}
+	\section{Perspectives}
+	\section{conclusion}
+	
+\addcontentsline{toc}{chapter}{Bibliographie}
+\bibliography{bib}
+
+\addcontentsline{toc}{chapter}{Annexes}
+\appendix
+\chapter{Optimisation du choix du modèle dynamique}
+\chapter{Résolution d'un problème quadratique}
+
+
+\end{document}

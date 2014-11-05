@@ -1,1 +1,7 @@
 *~
+*.aux
+*.backup
+*.toc
+*.log
+*.bbl
+*.blg
