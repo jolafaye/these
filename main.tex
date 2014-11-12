@@ -35,27 +35,19 @@
 
 \addcontentsline{toc}{chapter}{Résumé}
 
-\chapter{Introduction}
-	\include{chapitres/introduction}
-	
-\chapter{Modélisation et commande de Pepper}
-	\include{chapitres/modelisation}
-	
-\chapter{Prise en compte du basculement de Pepper}
-	\include{chapitres/push}
-	
-\chapter{Prise en compte de l'inclinaison du sol}
-	\include{chapitres/pente}
+\input{chapitres/introduction}
+\input{chapitres/modelisation}
+\input{chapitres/commande}
+\input{chapitres/observateur}
+\input{chapitres/resultat}
+\input{chapitres/synthese}
 
-\chapter{Synthèse}
-	\include{chapitres/synthese}
-	
 \addcontentsline{toc}{chapter}{Bibliographie}
 \bibliography{bib}
 
 \addcontentsline{toc}{chapter}{Annexes}
 \appendix
-	\include{chapitres/annexes}
+\input{chapitres/annexes}
 
-
+	
 \end{document}
