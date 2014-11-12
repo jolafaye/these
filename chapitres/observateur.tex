@@ -1,14 +1,53 @@
 \chapter{Mesures et observateurs}
-
-	~
-
 	\section{Les différentes valeurs à observer}
+
+		- Position / vitesse / accélération base et corps
+
+		- angle / vitesse angulaire / accélération angulaire basculement base
+
+		- angle de la pente
+
 	\section{Capteurs disponibles}
+
+		- mre / imu
+
 	\section{Méthodes de mesure et conséquences}
 		\subsection{Mesure de la posture du robot}
+
+			- En utilisant les mre et le modèle théorique du robot
+			
+			- Nécessite un bon modèle du robot et une bonne calibration
+
 		\subsection{Observation de la position de la base mobile}
+
+			- On mesure la vitesse des roues. On en déduit la position de la base en intégrant dans le temps et en utilisant un modèle des roues
+
+			- Dérive due à l'intégration. Ne mesure pas les glissements sur le sol
+
 		\subsection{Observation des vitesses et accélérations du robot et de la base}
+
+			- Celles-ci sont observées en utilisant la prédiction du mouvement du robot au prochain pas de temps (utilisation de la dynamique d'ordre 3)
+
+			- Mieux que dériver la psoition du robot, moins de sensibilité au bruit (dérivation, quantification, capteur)
+
+			- Moins réactif aux erreurs en vitesses et accélérations
+
+			- Le robot étant commencé en position pour le cors, et en vitesse pour les roues, cela n'a pas grande importance
+
 		\subsection{Observation de l'angle de basculement et d'inclinaison du sol}
-			\subsubsection{Observabilité}
-			\subsubsection{Méthode d'observation}
-			\subsubsection{Limites}
+			
+			- Système de base non observable. On mesure la somme des deux angles avec les accéléros, et la somme des variations angulaire avec les gyro.
+
+			- Pas de capteurs de force sur les roues. On ne sait pas lesquelles sont au sol.
+
+			- Il faut faire des hypothèses pour rendre le système observable
+
+			- Problèmes : Non-détections et faux-positifs
+
+			- Considère que lorsque l'angle est constant, alors on est sur une pente
+
+			- Sinon, toute variation de l'angle est considéré comme un push
+
+			- Problèmes si on perturbe le robot avec une dynamique lente
+
+			
