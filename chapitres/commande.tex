@@ -1,37 +1,155 @@
 \chapter{Commande par modèle prédictif}
-
-	~
-
 	\section{Principe}
+
+		- Commande optimale sous contraintes
+
+		- Résoudre le problème sur un horizon donné, en utilisant un modèle prédisant le futur
+
+		- La solution optimale du système n'est pas connu si l'on ne connait pas less objectifs et contraintes futures
+
+		- Exemple de faire un déplacement triangle
+
+		- Utilisation de la commande optimale dans la marche bipède.
+
+		- Intéret lorsque les contraintes sont fortes par rapport aux dynamiques de mandées de mouvement
+
 	\section{Outil mathématique et contraintes associées}
-		\subsection{Problématique}
-		\subsection{Principe de la programmation quadratique}
-		\subsection{Contraintes sur la formulation du problème d'optimisation}
+
+			- On veut faire tourner le programme rapidement.
+
+			- Il n'existe généralement pas de solution analytique à un problème d'optimisation sous contrainte
+
+			- on ne peut guère aller plus compliqué qu'une résolution quadratique sous contrainte linéaire
+
+			- On va donc utiliser une formulation de QP
+
+			- Ce type d'optimisation nous permet de minimiser une norme 2, ce qui est suffisant. Le temps de calcul ne dépend pas du nombre d'objectifs.
+
+			- Il faudra linéariser les contraintes du problème
+
+			- Le temps de calcul dépend du nombre de contraintes, il faudra donc choisir un ensemble de contraintes linéaires conservatives suffisament petit, mais sans restreindre trop le système.
+
+			- Lien vers l'anexe our expliquer comment on résoud un qp
+
 	\section{Formulation des problèmes d'optimisations}
 		\subsection{Introduction}
+
+			- On ne peut pas résoudre simplement un problème de complémentarité mixte
+
+			- On décide de séparer la résolution du problème en 3 parties
+
+			- Expliquer les deux premières, dépendant des dynamiques
+
+			- Expliquer le problème avec la transition, et la non gestion de l'impact.
+
+			- Un superviseur est écrit permettant de gérer les différents états.
+
 		\subsection{Lorsque les trois roues sont en contact avec le sol}
 			\subsubsection{Formulation des objectifs}
+
+				- Tracking control
+
+				- Robustesse (CoP)
+
+				- Stabilité numérique (jerk)
+
 			\subsubsection{Formulation des contraintes}
+
+				- Respecter la dynamique : CoP
+
+				- Limites vitesses/accélérations de la base
+
+				- Respecter la cinématique : C-B
+
 			\subsubsection{Problème quadratique résultant}
+		
+				- Ecrire le problème résultant
+
 		\subsection{Lorsque le robot bascule sur deux roues}
 			\subsubsection{Formulation des objectifs}
+		
+				- Minimiser l'angle
+
+				- Minimiser la vitesse angulaire
+
+				- Stabilité numérique
+
 			\subsubsection{Formulation des contraintes}
+
+				- Contrainte sur l'angle > 0
+
+				- Respecter la cinématique : C-B
+
+				- Limites vitesses/accélérations de la base
+
 			\subsubsection{Problème quadratique résultant}
+		
+				- Ecrire le problème résultant
+
 		\subsection{Gestion de la transition entre les deux états}
-			\subsubsection{Problématique associée}
 			\subsubsection{Formulation des objectifs}
+
+				- Minimiser la vitesse
+
+				- Robustesse (CoP)
+
+				- Stabilité numérique (jerk)
+
 			\subsubsection{Formulation des contraintes}
+
+				- Respecter la dynamique : CoP
+
+				- Limites vitesses/accélérations de la base
+
+				- Respecter la cinématique : C-B
+
 			\subsubsection{Problème quadratique résultant}
-			
-	~
-			
+		
+				- Ecrire le problème résultant
+
 	\section{Gestion des deux modèles dynamiques exclusifs}
 		\subsection{Choix d'un superviseur et conséquences}
+
+			- Problème de transitions entre les controlleurs
+
+			- Il faut un superviseur qui gère les différents états
+
+			- Parler de l'estimateur d'impact
+
+			- Limitations due au superviseur : Détection tardive / inadéquate / Choix non optimal / Oscillations
+
+			- Avantages : Gérer de manière simple différents modèles dynamiques
+
 		\subsection{Fonctionnement du superviseur}
+
+			- Expliquer le fonctionnement du superviseur et des différents états
+
 		\subsection{Fonctionnement de l'estimateur d'impact}
+
+			- Détailler le fonctionnement de l'estimateur d'impact
+
 	\section{Vers une modélisation unifiée des deux dynamiques}
 		\subsection{Problème de complémentarité linéaire}
+
+			- Considérer uniquement un problème de basculement dans une direction
+
+			- dire que par la suite, se limiter à ce cas permet de gérer tout les cas, en faisant quelques hyothèses
+
+			- Enoncer la dynamique de complémentarité
+
+			- Problème : Il y a $2^n$ états possibles linéaires à la dynamique.
+
 		\subsection{Méthodes de résolution}
-			\subsubsection{Programmation quadratique avec contraintes non-linéaires}
-			\subsubsection{Linéarisation par \textit{a priori}}
-			\subsubsection{Conclusion}
+				- Considérer que lorsque le robot ne bascle pas, la commande ne le fera pas basculer. On se retrouver dans le cas du premier programme d'optimisation uniquement
+
+				- Si un baculement est mesure, faire un apriori qu'il n'y aura pas de rebond possible. Ainsi, il n'y a qu'une variable à choisir : le temps d'impact.
+
+				- On se retrouve avec un problème non-linéaire, qui devient linéaire en choisissant l'état de cette variable.
+
+				- Il y a n choix possibles.
+
+				- On peut résoudre n QP et choisir le plus optimal.
+
+				- Ou alors on peut résoudre 3 QP et faire converger l'état de la variable.
+
+				- Présenter le problème d'optimisation unifié

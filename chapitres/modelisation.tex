@@ -13,55 +13,57 @@
 
 		\subsection{Problème de complémentarité mixte}
 		
-		- Présentation des variables (c, b, forces de contact sur chaque roues)
+			- Présentation des variables (c, b, forces de contact sur chaque roues)
 		
-		- Equations des énergies cin/pot
+			- Equations des énergies cin/pot
 
-		- Contraintes sur la position de b donc problème de comlémentarité sur les forces de contact
+			- Contraintes sur la position de b donc problème de comlémentarité sur les forces de contact
 
-		- Problème de résolution de ce problème de complémentarité mixte, il faut donc le séparer en plusieurs parties
+			- Problème de résolution de ce problème de complémentarité mixte, il faut donc le séparer en plusieurs parties
 		
 		\subsection{Les trois roues en contact avec le sol}
 
-		- Etat des forces de contact définies (toutes en contact)
+			- Etat des forces de contact définies (toutes en contact)
 
-		- En dériver l'équation du cop (barycentre des forces de contact)
+			- En dériver l'équation du cop (barycentre des forces de contact)
 
-		- Linéarisation et approximations
+			- Linéarisation et approximations
 		
 		\subsection{Le robot bascule sur deux roues}
 
-		- Etat des forces de contact définies (seul deux des forces sont en contact)
+			- Etat des forces de contact définies (seul deux des forces sont en contact)
 
-		- Changement de variable pour utiliser l'angle de basculement
+			- CoP fixé
 
-		- En dériver l'équation liant l'angle, c et b. 
+			- Changement de variable pour utiliser l'angle de basculement
+	
+			- En dériver l'équation liant l'angle, c et b. 
 		
-		- Linéarisation et approximations
+			- Linéarisation et approximations
 
 	\section{Modélisation de la dynamique future}
 		\subsection{Nécessité de prédire le futur}
 
-		- Les contraintes dynamiques sont trop fortes pour autoriser un contrôle sans prédiction du futur à haute accélération.
+			- Les contraintes dynamiques sont trop fortes pour autoriser un contrôle sans prédiction du futur à haute accélération.
 
-		- Démontrer en calculant les accélérations limites dans différents cas
+			- Démontrer en calculant les accélérations limites dans différents cas
 
-		- Non nécéssité d'un modèle dynamique précis dans le futur (feedback, on ne calcule que la première commande)
+			- Non nécéssité d'un modèle dynamique précis dans le futur (feedback, on ne calcule que la première commande)
 
-		- Permet d'assurer une stabilité à long terme (quelques secondes)
+			- Permet d'assurer une stabilité à long terme (quelques secondes)
 
 		\subsection{Choix de la dynamique d'extrapolation}
 
-		- Contraintes : Linéarité entre les variables / accélérations continues donc polynome d'ordre 3
+			- Contraintes : Linéarité entre les variables / accélérations continues donc polynome d'ordre 3
 
-		- Formulation de l'équation d'état
+			- Formulation de l'équation d'état
 
-		- Calcul des dérivées
+			- Calcul des dérivées
 
 		\subsection{Formulation du modèle prédictif}
 
-		- Formulation du modèle prédictif
+			- Formulation du modèle prédictif
 
-		- Problème de controlabilité dans lecas de basculement.
+			- Problème de controlabilité dans le cas de basculement.
 
-		- Inversions de matrice
+			- Inversions de matrice
