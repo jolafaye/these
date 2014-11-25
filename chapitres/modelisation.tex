@@ -1,13 +1,36 @@
 \chapter{Modélisation du système}
 \section{Choix du modèle et conséquences}
+
+	L'objectif de ce chapitre est de développer une modélisation dynamique d'un robot humanoïde possédant une base mobile à roues omnidirectionnelles. 
+	Ce modèle doit apporter un bon compromis entre fidélité vis à vis du comportement du robot réel et complexité, qui impacte de manière directe le temps de calcul.
+	Notamment, il n'est pas nécessaire de modéliser tout les paramètres du robot : Représenter uniquement les dynamiques principales suffit à obtenir un contrôle précis du robot. 
+	La section \ref{section.closedloop} détaillera les méthodes de compensation des éléments non modélisés.
 	
-	- Choix d'un modèle dynamique rigide multi corps
+	Le choix se porte donc sur une modélisation dynamique d'un robot rigide multi-corps. Les éléments suivants ne seront donc pas modélisés :
+	\liste{
+		\item 	Les différentes élasticités. Les technologies d'actionnement utilisés sur la plate-forme expérimentale ne comportent pas d'élasticités notables.
+			Le seul élément compliant est un ensemble de deux bandes élastiques attachés à l'articulation du roulis de la hanche permettant au robot de maintenir une posture droite en l'absence de contrôle du moteur.
+			Cet élément est négligeable en terme de dynamique car la raideur associée est très faible.
+		\item	Les jeux mécaniques présents sur le robot. Ceux-ci sont présents sur la plate-forme expérimentale, du fait de systèmes de réductions présents entre les moteurs et l'articulation basés sur un système d'engrenages.
+			Les effets dynamiques parasites apportés par le jeu mécanique ne sont pas négligeables.
+			Cependant, il peuvent être compensés de manière suffisamment efficace (plus de détails en section \ref{section.closedloop}) pour que cela soit transparent du point de vue de la commande présentée dans le chapitre \ref{chapitre.commande}.
+		\item	Les glissements pouvant survenir entre les roues du robot et le sols ne sont pas modélisés. 
+			Ceux-ci peuvent être néanmoins handicapant, car le système devient en partie non-observable en présence de glissement (plus de détails en section \ref{section.observateurbase}).
+			Une solution a été apportée en section \ref{section.objectifs3roues} afin de limiter leurs possibilités d'apparition ainsi que leurs impacts sur la dynamique du robot.
+		\item	Le nombre de corps choisi pour cette modélisation dynamique est nécessairement plus faible que le nombre de corps réels présents sur le robot, pour des raisons de complexité du modèle.
+			Ainsi, tout les effets dynamiques ne pourront pas être représentés. Le choix du nombre de corps, et de leurs propriétés doit permettre de rendre négligeable les dynamiques non modélisées.
+			Le développement d'une solution optimale du choix du nombre de corps et de leurs propriété est présenté en annexe \ref{annexe.choixmodele}.
+	}
 	
-	- Compromis fidélité/compléxité et temps de calcul
+	Le modèle présenté comporte deux corps. Le premier est attaché à la base mobile, de position $b$, de masse $m_b$ et d'inertie $I_b$. 
+	Le second modélisera l'ensemble du reste du robot, de position $c$, de masse $m_c$ et d'inertie $I_c$.
 	
-	- Choix du nombre de corps (lien vers anexe pour une optimisation des valeur).
+	Le choix d'un modèle à deux corps permet de prendre en compte la rotation générale du corps du robot autour de la base mobile.
+	Cette modélisation est pertinente dans le cas où les bras du robot ne génèrent que peu ou pas de moment d'inertie.
+	Dans le cas contraire, nous considérerons que les effets parasites dû aux mouvements des bras pourront être compensés correctement par le schéma de contrôle en boucle fermée présenté en section \ref{section.closedloop}.
+	Le choix de ce modèle est également conditionné par la répartition massique de la plate-forme expérimentale. 
+	Elle est principalement concentré en deux zones, qui correspondent aux corps choisis : la base mobile et le torse du robot.
 	
-	- Phénomènes physiques non-pris en compte : Mécanique de contact roue/sol + jeu articulaire + élasticité hip roll + moments des différents sous corps rigide
 	
 	\section{Modélisation dynamique}
 
@@ -51,7 +74,6 @@
 			- Non nécéssité d'un modèle dynamique précis dans le futur (feedback, on ne calcule que la première commande)
 
 			- Permet d'assurer une stabilité à long terme (quelques secondes)
-
 		\subsection{Choix de la dynamique d'extrapolation}
 
 			- Contraintes : Linéarité entre les variables / accélérations continues donc polynome d'ordre 3
@@ -65,5 +87,5 @@
 			- Formulation du modèle prédictif
 
 			- Problème de controlabilité dans le cas de basculement.
-
+			
 			- Inversions de matrice

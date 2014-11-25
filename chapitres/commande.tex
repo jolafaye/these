@@ -1,4 +1,5 @@
 \chapter{Commande par modèle prédictif}
+\label{chapitre.commande}
 	\section{Principe}
 
 		- Commande optimale sous contraintes
@@ -46,6 +47,7 @@
 
 		\subsection{Lorsque les trois roues sont en contact avec le sol}
 			\subsubsection{Formulation des objectifs}
+			\label{section.objectifs3roues}
 
 				- Tracking control
 
@@ -142,7 +144,7 @@
 		\subsection{Méthodes de résolution}
 				- Considérer que lorsque le robot ne bascle pas, la commande ne le fera pas basculer. On se retrouver dans le cas du premier programme d'optimisation uniquement
 
-				- Si un baculement est mesure, faire un apriori qu'il n'y aura pas de rebond possible. Ainsi, il n'y a qu'une variable à choisir : le temps d'impact.
+				- Si un basculement est mesure, faire un apriori qu'il n'y aura pas de rebond possible. Ainsi, il n'y a qu'une variable à choisir : le temps d'impact.
 
 				- On se retrouve avec un problème non-linéaire, qui devient linéaire en choisissant l'état de cette variable.
 
