@@ -1,20 +1,46 @@
 \chapter{Commande par modèle prédictif}
 \label{chapitre.commande}
 	\section{Principe}
-
-		- Commande optimale sous contraintes
-
-		- Résoudre le problème sur un horizon donné, en utilisant un modèle prédisant le futur
-
-		- La solution optimale du système n'est pas connu si l'on ne connait pas less objectifs et contraintes futures
-
-		- Exemple de faire un déplacement triangle
-
-		- Utilisation de la commande optimale dans la marche bipède.
-
-		- Intéret lorsque les contraintes sont fortes par rapport aux dynamiques de mandées de mouvement
-
+	
+		L'objectif de ce chapitre est de présenter la loi de commande permettant de réaliser les mouvements et l'équilibre d'un robot humanoïde à roues omnidirectionnelles.
+		Dans le chapitre \rf{chapitre.modele}, nous avons développé un modèle du robot utilisant deux corps.
+		Les contraintes de complémentarités dues aux forces de contact nous ont emmené à modéliser le robot en deux parties : lorsque celui-ci est sur ces trois roues, et lorsqu'il bascule sur deux de ses roues.
+		Ensuite de quoi, nous avons montré qu'il est important de modéliser la dynamique dans le futur à cause des contraintes sur le CoP, qui limitent fortement les mouvements réalisables par le robot.
+		Enfin, deux équations prédictives de la dynamique ont été formulées :
+		\liste{
+			\item Dans le cas où le robot possède trois roues sur le sol, l'équation \rf{eq.dyn_cop_pred} exprime la relation entre la position du CoP et la dynamique des corps du robot.
+			\item Dans le cas où le robot bascule sur deux roues, l'équation \rf{eq.dyn_tilt_pred} exprime la dynamique de l'angle de basculement en fonction de celle des corps du robot.
+		}
+		
+		Nous avons donc choisi de réaliser une loi de commande optimale basée sur un modèle prédictif linéaire en les variables de commande, soumis à des contraintes linéaires.
+		La fonction objectif de cette commande optimale est basée sur la minimisation d'une norme d'ordre $2$, permettant la convergence d'une grandeur d'erreur vers $0$, utilisés notamment dans une tâche de suivi de trajectoire.
+		
+		L'interêt de l'aspect prédictif de cette commande est de pouvoir utiliser les connaissances que l'on a sur le comportement dynamique du système ainsi que sur les mouvements demandés, pour prévoir et adapter en avance les trajectoires résultantes
+		afin d'obtenir une meilleure réalisation des objectifs dans le temps. 
+		Cette adaptation est nécessaire lorsque les contraintes du système réduisent de beaucoup l'ensemble des trajectoires atteignables instantanément par les corps du robot, ce qui est notre cas.
+	
 	\section{Outil mathématique et contraintes associées}
+	
+		Notre objectif est de faire tourner la loi de commande en temps réel sur la plateforme expérimentale. 
+		Il est donc important d'utiliser un outil mathématique de calcul de la loi de commande qui permette cela.
+		De plus, notre système étant fortement contraint (Position du CoP, limites articulaires, limites dynamique des moteurs), nous ne pouvons disposer d'une solution analytique.
+		
+		Nous avons donc choisi d'utiliser la méthode de la programmation quadratique sous contraintes linéaires.
+		Cette méthode de formulation d'un problème d'optimisation permet de minimiser une fonction objectif quadratique en les variables d'optimisation, où celles-ci sont soumises à des contraintes d'inégalités linéaires :
+		\eq{
+			\lst{
+				\min\limits_x \prt{\tr{x}Qx+\tr{p}x} \\
+				v^- \leq Vx \leq v^+
+			}
+		}
+		avec $x$ le vecteur des variables d'optomisation, $Q$ la matrice hessienne, $p$ le vecteur linéaire, $V$ la matrice des contrainte et $v^+$ et $v^-$ les vecteurs linéaire des contraintes.
+		
+		Une fois le problème posé, un solveur de problème quadratique permet, en temps réel, de calculer la solution du problème de minimisation en un certain nombre d'itérations, dépendant des contraintes.
+		L’annexe \rf{annexe.qp} détaille les méthodes de résolutions d'un problème quadratique.
+		\newpage\newpage
+		
+		
+
 
 			- On veut faire tourner le programme rapidement.
 
@@ -69,6 +95,7 @@
 				- Ecrire le problème résultant
 
 		\subsection{Lorsque le robot bascule sur deux roues}
+			\label{section.mpc_deux_roues}
 			\subsubsection{Formulation des objectifs}
 		
 				- Minimiser l'angle
