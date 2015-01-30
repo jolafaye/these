@@ -22,7 +22,7 @@
 		
 		Le choix d'un modèle à deux corps permet de prendre en compte la rotation générale du corps du robot autour de la base mobile.
 		Cette modélisation est pertinente dans le cas où les bras du robot ne génèrent que peu ou pas de moment angulaire.
-		Dans le cas contraire, nous considérerons que les effets parasites dû aux mouvements des bras pourront être compensés correctement par le schéma de contrôle en boucle fermée présenté en section \ref{section.closedloop}.
+		Dans le cas contraire, nous considérerons que les effets parasites dûs aux mouvements des bras pourront être compensés correctement par le schéma de contrôle en boucle fermée présenté en section \ref{section.closedloop}.
 		Le choix de ce modèle est également conditionné par la répartition massique de la plate-forme expérimentale :
 		Elle est principalement concentré en deux zones, qui correspondent aux corps choisis : la base mobile et le torse du robot.	
 	
@@ -33,7 +33,7 @@
 			\item 	Les différentes élasticités. Les technologies d'actionnement utilisées sur la plate-forme expérimentale ne comportent pas d'élasticités notables.
 				Le seul élément compliant est un ensemble de deux bandes élastiques attachées à l'articulation du roulis de la hanche permettant au robot de maintenir une posture droite en l'absence de contrôle du moteur.
 				Cet élément est négligeable en terme de dynamique car la raideur associée est très faible.
-			\item	Les jeux mécaniques présents sur le robot. Ceux-ci sont présents sur la plate-forme expérimentale, du fait de systèmes de réductions présents entre les moteurs et les articulations basés sur un système d'engrenages.
+			\item	Les jeux mécaniques présents sur le robot. Ceux-ci sont présents sur la plate-forme expérimentale, du fait du systèmes de réduction entre les moteurs et les articulations basés sur des engrenages.
 				Les effets dynamiques parasites apportés par le jeu mécanique ne sont pas négligeables.
 				Cependant, il peuvent être compensés de manière suffisamment efficace (plus de détails en section \ref{section.closedloop}) pour que cela soit transparent du point de vue de la commande présentée dans le chapitre \ref{chapitre.commande}.
 			\item	Les glissements pouvant survenir entre les roues du robot et le sols ne sont pas modélisés. 
@@ -56,7 +56,7 @@
 				On considère le robot modélisé par deux corps $\bar{b}$ et $\bar{c}$ de masse associée $m_b$ et $m_c$. 
 				Ces corps sont en contact avec le sol par l'intermédiaire de trois points $p_f$, $p_r$ et $p_l$ correspondant aux trois points de contact des roues avec le sol \rfi{fig.bascule}.
 				La roue avant gauche correspond au point $p_r$, la roue avant droite au point $p_l$ et la roue arrière au point $p_f$.
-				On considère que le système peut être dans quatre mode dynamique différents :
+				On considère que le système peut se retrouver dans quatre mode dynamique différents :
 				\liste{
 					\item Le robot ne bascule pas et les trois roues sont en contact avec le sol.
 					\item Le robot est en rotation vers l'avant autour de l'axe défini par les deux roues avant. On note l'angle de rotation $\psi_f$. La roue arrière est dans ce cas en l'air.
@@ -80,10 +80,10 @@
 					Ce repère est attaché au sol, $\vec{x}$ et $\vec{y}$ inclus dans le plan, et $\vec{z}$ orthogonal au sol. 
 					Celui-ci n'est pas forcément horizontal, ce qui implique que le vecteur gravité ne soit pas forcément orienté selon l'axe $\vec{z}$.
 					
-					Premièrement, on considère que la position des corps $\bar{c}$ et $\bar{b}$ correspond à la composition de trois éléments \rfi{fig.lagrange}:
+					Premièrement, on considère que la position des corps $\bar{c}$ et $\bar{b}$ est obtenue par la composition de trois éléments \rfi{fig.lagrange}:
 					\liste{
 						\item $c_0$ et $b_0$ correspondent à la position de chaque corps par rapport à l'origine $O$. Il est à noter que $c_0^{xy}=b_0^{xy}$.
-						\item $\delta_c$ correspond à longueur apportée par l'actionnement des moteurs du robot. On peut noter du fait qu'il n'y a pas d'actionnement possible pour la base mobile, $\delta_b=0$.
+						\item $\delta_c$ correspond à la longueur apportée par l'actionnement des moteurs du robot. On peut noter le fait qu'il n'y a pas d'actionnement possible pour la base mobile : $\delta_b=0$.
 						\item $\psi_f$, $\psi_r$ et $\psi_l$ correspondent aux rotations apportées par le basculement du robot sur chacun de ses cotés.
 					}
 					
@@ -100,7 +100,7 @@
 					$\forall i\in\{f,r,l\}$ :
 					\liste{
 						\item On note $\theta_i$ l'angle que fait le vecteur $\overrightarrow{b_0^{xy}~p_i^{xy}}$ avec l'axe $\vec{x}$. 
-						On note $\vec{n_i}$ l'axe résultant et l'axe orthogonal $\vec{t_i}=\vec{z} \times \vec{n_i}$.
+						On note $\vec{n_i}$ l'axe résultant et $\vec{t_i}=\vec{z} \times \vec{n_i}$ l'axe orthogonal.
 						$c_0$ et $b_0$ étant verticalement alignés, il en est de même pour le corps $\bar{c}$.
 						On note $\rep_i$ le repère $(O, \vec{n}_i, \vec{t}_i, \vec{z})$.
 						\item On note $\phi_{i_b}$ et $\phi_{i_c}$ les angles que font respectivement les vecteurs $\overrightarrow{b_0^{t_iz}~p_i^{t_iz}}$ et $\overrightarrow{c_0^{t_iz}~p_i^{t_iz}}$ avec l'axe $\vec{z}$.
@@ -137,7 +137,9 @@
 						\bar{b}^z &= b^z + \somme{i\in\{f, r, l\}}{}{-h_b + l_{b_i}\cos(\phi_{i_b}+\psi_i)}
 					}
 					
-					Nous aurons besoin également des équations cinématiques des points $p_{frl}$. $\forall i\in\{f,r,l\}$ :
+					Nous aurons besoin également des équations cinématiques des points $p_f$, $p_r$ et $p_l$. 
+					
+					$\forall i\in\{f,r,l\}$ :
 					
 					\eqa{
 					\label{eq.cin_px}
@@ -441,7 +443,7 @@
 					\forall i\in\{f,r,l\}, (\psi_i \neq 0) \then (F_i^{xyz} = 0)
 				}
 				
-				Ensuite, lorsque la force de contact sur une des roues est positive, alors le robot ne peut pas basculer sur l'axe opposé :
+				Ensuite, lorsque la force de contact sur une des roues est non-nulle, le robot ne peut pas basculer sur l'axe opposé :
 				\eq{
 					\forall i\in\{f,r,l\}, (F_i^{xyz} \neq 0) \then (\psi_i = 0)
 				}
@@ -596,8 +598,11 @@
 				
 				Enfin, les trois contraintes \rf{eq.force_contrainte_trois_roues} impliquent que $d^{xy}$ est à l'intérieur du triangle défini par les trois points de contacts :
 				\eqa{
+				\label{eq.ctr_cop_1}
 					d^{xy} \times (p_r^{xy}-p_f^{xy}) &\ge 0 \\
+				\label{eq.ctr_cop_2}
 					d^{xy} \times (p_l^{xy}-p_r^{xy}) &\ge 0 \\
+				\label{eq.ctr_cop_3}
 					d^{xy} \times (p_f^{xy}-p_l^{xy}) &\ge 0
 				}
 				
@@ -617,19 +622,19 @@
 					\forall (i,j)\in\{f,r,l\}, i\neq j\neq k,\lst{\psi_i = \psi_j = 0\\ F_k^{xyz} = 0}
 				}
 				
-				Ainsi, le jeu de variables $q$ devient :
+				On défini le jeu de variables $q'$ suivant :
 				\eq{
-					q = \tr{\mat{b^x & b^y & b^z & c^x & c^y & c^z & \psi_k}}
+					q' = \tr{\mat{b^x & b^y & b^z & c^x & c^y & c^z & \psi_k}}
 				}
 				et l'on peut écrire le modèle dynamique correspondant :
 				\eqa{
-					&M \ddot{q} - f(q) = \tr{J}(q)\lambda \\
+					&M' \ddot{q'} - f(q') = J'^{^t}(q')\lambda' \\
 					&F_{i}^z \ge 0,~~ F_{j}^z \ge 0
 				}
 				avec :			
 				\eqa{
-					\lambda &= \tr{\mat{F_{i}^x & F_{j}^x & F_{i}^y & F_{j}^y & F_{i}^z & F_{j}^z}}\\
-					M &= \mat{
+					\lambda' &= \tr{\mat{F_{i}^x & F_{j}^x & F_{i}^y & F_{j}^y & F_{i}^z & F_{j}^z}}\\
+					M' &= \mat{
 						m_b & 0 & 0 & 0 & 0 & 0 & m_{hb}C_{\theta_k} \\
 						0 & m_b & 0 & 0 & 0 & 0 & m_{hb}S_{\theta_k} \\
 						0 & 0 & m_b & 0 & 0 & 0 & m_{hb}d_k \\
@@ -638,7 +643,7 @@
 						0 & 0 & 0 & 0 & 0 & m_c & m_{hc}d_k \\
 						m_{hb}C_{\theta_k} & m_{hb}S_{\theta_k} & m_{hb}d_k & m_{hc}C_{\theta_k} & m_{hc}S_{\theta_k} & m_{hc}d_k & m_q+m_td_k^2
 					},\\
-					f(q) &= \mat{
+					f(q') &= \mat{
 						m_b g^x \\ 
 						m_b g^y \\ 
 						m_b g^z \\ 
@@ -647,7 +652,7 @@
 						m_c g^z \\ 
 						(m_{hc} + m_{hb})\cos(\theta_k)g^x + (m_{hc} + m_{hb})\sin(\theta_k)g^y + m_td_kg^z \\
 					},\\
-					\tr{J}(q) &= \mat{
+					J'^{^t}(q') &= \mat{
 						1 & 1 & 0 & 0 & 0 & 0 \\
 						0 & 0 & 1 & 1 & 0 & 0 \\
 						0 & 0 & 0 & 0 & 1 & 1 \\
@@ -710,7 +715,7 @@
 				
 				Nous allons maintenant considérer que $d_k=0$. Cela correspond à négliger le mouvement vertical apporté par le basculement. 
 				La distance $d_k$ sur le plan $(\vec{x},\vec{y})$ du CoM de la base mobile par rapport à la droite de contact étant faible devant sa hauteur $h_b$, on peut considérer cette approximation valable. 
-				Une validation quantitative de cette approximation sera réalisée dans la section \rf{section.closedloop}
+				Une validation quantitative de cette approximation sera réalisée dans la section \rf{section.closedloop}.
 				
 				Enfin, les contraintes de non-pénétration dans le sol impliquent que le CoP soit positionné sur la droite reliant les deux roues en contact avec le sol.
 				Nous allons le contraindre à être au centre, afin d'éviter de s'approcher des situations où le robot pourrait basculer sur une seule roue.
@@ -751,6 +756,7 @@
 				L'équation \rf{eq.model_psi_n} représente finalement la relation entre l'évolution de l'angle de basculement et les variables commandées  $c^{n_kt_k}$ et $b^{n_kt_k}$.
 
 	\section{Modélisation de la dynamique future}
+		\label{section.modele_futur}
 		\subsection{Nécessité de prédire le futur}
 	
 			L'ensemble des accélérations atteignables par les corps du robot est limité par leurs positions actuelles ainsi que les contraintes sur le CoP. 
@@ -870,7 +876,7 @@
 				Dans le cas où le robot possède les trois roues en contact avec le sol, on définit le jeu de variable $X$ :
 				\eq{
 				\label{eq.jeu_var}
-					X = \tr{\mat{\dddot{b}_1^x & \hdots & \dddot{b}_n^x & \dddot{b}_1^y & \hdots & \dddot{b}_n^y & \dddot{c}_1^x & \hdots & \dddot{c}_n^x & \dddot{c}_1^y & \hdots & \dddot{c}_n^y}}
+					X = \tr{\mat{\dddot{c}_1^x & \hdots & \dddot{c}_n^x & \dddot{c}_1^y & \hdots & \dddot{c}_n^y & \dddot{b}_1^x & \hdots & \dddot{b}_n^x & \dddot{b}_1^y & \hdots & \dddot{b}_n^y}}
 				}
 				
 				On peut exprimer dans un premier temps les relations différentielles pour les variables $b^{xy}$ :
@@ -894,7 +900,7 @@
 				Enfin, en utilisant l'équation \rf{eq.cop_final_trois_roues}, on peut formuler la position du CoP sur l'horizon de prédiction :
 				\eq{
 				\label{eq.dyn_cop_pred}
-					D^{xy} = U_{dc}C^{xy} + S_{dc}\hat{c}^{xy} + U_{db}\ddot{B}^{xy} + S_{db}\hat{b}^{xy} + S_{dg}g^{xy}
+					D^{xy} = U_{dc}\dddot{C}^{xy} + S_{dc}\hat{c}^{xy} + U_{db}\dddot{B}^{xy} + S_{db}\hat{b}^{xy} + S_{dg}g^{xy}
 				}
 				avec :
 				\eqa{
@@ -920,7 +926,7 @@
 					
 					Nous avons donc le jeu de variable suivant :
 					\eq{
-						X = \tr{\mat{\dddot{b}_1^{n_k} & \hdots & \dddot{b}_n^{n_k} & \dddot{c}_1^{n_k} & \hdots & \dddot{c}_n^{n_k}}}
+						X' = \tr{\mat{\dddot{b}_1^{n_k} & \hdots & \dddot{b}_n^{n_k} & \dddot{c}_1^{n_k} & \hdots & \dddot{c}_n^{n_k}}}
 					}
 					
 					On peut exprimer dans un premier temps les relations différentielles pour la variable $\psi_k$ :
@@ -992,11 +998,11 @@
 						T &\neq \sqrt{\dfrac{m_bh_b^2+m_ch_c^2}{-6(m_bh_b+m_ch_c)g^z}} \\
 						T &> 0 \\
 					\label{eq.condition_g_inversibilite}
-						g^z &< 0
+						-(m_bh_b+m_ch_c)g^z &> 0
 					}
 					
-					Notamment, on peut remarquer que la dynamique de basculement n'est plus inversible lorsque le robot se retrouve en position horizontale ou à l'envers, car l'équation \rf{eq.condition_g_inversibilite} ne serait plus respectée.
-					De même, pour des raisons de stabilité numérique, il ne faut pas choisir une période d'échantillonage $T$ proche de la valeur interdite de l'équation \rf{eq.condition_T_inversibilite}.
+					Notamment, on peut remarquer que la dynamique de basculement n'est plus inversible lorsque le robot se retrouve en position horizontale, car l'équation \rf{eq.condition_g_inversibilite} ne serait plus respectée.
+					De plus, pour des raisons de stabilité numérique, il ne faut pas choisir une période d'échantillonage $T$ proche de la valeur interdite de l'équation \rf{eq.condition_T_inversibilite}.
 					
 		\subsection{Synthèse}
 		

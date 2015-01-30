@@ -1,54 +1,124 @@
 \chapter{Mesures et observateurs}
-	\section{Les différentes valeurs à observer}
-
-		- Position / vitesse / accélération base et corps
-
-		- angle / vitesse angulaire / accélération angulaire basculement base
-
-		- angle de la pente
-
-	\section{Capteurs disponibles}
-
-		- mre / imu
+	\section{Introduction}
+	
+		L'objectif de ce chapitre est de présenter les différentes mesures et observateurs qui sont nécessaires à la réalisation de la commande présentée en chapitre \rf{chapitre.commande}.
+		Nous présenterons dans un premier temps les différentes valeurs à observer, puis la liste des capteurs diponibles sur la plate-forme expérimentale.
+		Ensuite de quoi, nous détaillerons les méthodes de mesures ainsi que les observateurs permettant de réaliser cela. 
+		Enfin, nous discuterons des conséquences de chaque méthode sur la stabilité et le comportement final du robot.
+	
+	\section{Valeurs à observer et capteurs disponibles}
+	
+		La loi de commande présentée en chapitre \rf{chapitre.commande} nécessite plusieurs variables d'entrées :
+		\liste{
+			\item L'état complet du CoM du corps du robot $\hat{c}$.
+			\item L'état complet du CoM de la base mobile $\hat{b}$.
+			\item L'angle de basculement et la vitesse angulaire, nécessaires au fonctionnement du superviseur \rf{section.superviseur}.
+			\item L'orientation du sol, nécessaire au calcul du vecteur gravité $g$.
+		}
+		
+		Afin de mesurer ces valeurs, la plate-forme expérimentale dispose de plusieurs capteurs :
+		\liste{
+			\item	Associé à chaque moteur, des capteurs magnéto-résistifs permettent de mesurer son angle ou sa vitesse angulaire.
+				Ces capteurs servent à mesurer la vitesse angulaire des roues de la base mobile.
+				Sur chacune des articulation du robot, ces capteurs servent à mesurer l'angle de l'articulation.
+			\item	Une centrale inertielle, disposée au centre de la base mobile, permet de mesurer l'accélération linéaire ainsi que la vitesse de rotation de la base mobile.
+		}
+		
+		Nous pouvons constater dans un premier temps qu'aucune des variables d'entrée de la loi de commande n'est directement mesurée par les capteurs.
+		Nous allons devoir réaliser des observateurs, afin d'estimer au mieux possibles ces valeurs.
 
 	\section{Méthodes de mesure et conséquences}
-		\subsection{Mesure de la posture du robot}
-
-			- En utilisant les mre et le modèle théorique du robot
+		\subsection{Observation de l'état du CoM de la base mobile}
+		\label{section.observateurbase}	
+			\subsubsection{Vitesse du CoM de la base mobile}
 			
-			- Nécessite un bon modèle du robot et une bonne calibration
-
-		\subsection{Observation de la position de la base mobile}
-		\label{section.observateurbase}
-			- On mesure la vitesse des roues. On en déduit la position de la base en intégrant dans le temps et en utilisant un modèle des roues
-
-			- Dérive due à l'intégration. Ne mesure pas les glissements sur le sol
-
-		\subsection{Observation des vitesses et accélérations du robot et de la base}
-
-			- Celles-ci sont observées en utilisant la prédiction du mouvement du robot au prochain pas de temps (utilisation de la dynamique d'ordre 3)
-
-			- Mieux que dériver la psoition du robot, moins de sensibilité au bruit (dérivation, quantification, capteur)
-
-			- Moins réactif aux erreurs en vitesses et accélérations
-
-			- Le robot étant commencé en position pour le cors, et en vitesse pour les roues, cela n'a pas grande importance
-
+				Les capteurs magnéto-résistifs associés aux moteurs des roues du robots nous permettent de mesurer la vitesse de rotation de celles-ci.
+				En utilisant le modèle géométrique de la base mobile, nous pouvons en déduire directement une vitesse de déplacement de la base mobile.
+				Cette déduction est valable uniquement si les roues ne glissent pas sur le sol.
+				
+				Soit $\beta_i$ la vitesse de la roue $i \in \{f, r, l\}$ et $W$ une matrice de transformation utilisant le modèle géométrique de la base mobile pour exprimer la vitesse de déplacement de la base mobile en fonction de celles des roues :
+				\eq{
+					\mat{\dot{b}^x \\ \dot{b}^y} = W\mat{\beta_f \\ \beta_r \\ \beta_l}
+				}
+				
+				Les différences entre la vitesse réelle de la base mobile et celle observée proviennent directement des glissements entre les roues et le sol, dépendants de la nature du sol et de l'usure du revêtement des roues.
+				
+				Une méthode, qui n'a pas été implémentée, afin de mesurer ce glissement serait d'utiliser les accéléromètres de la centrale inertielle de la base mobile. 
+			
+			\subsubsection{Position du CoM de la base mobile}
+			
+				La position de la base mobile est directement obtenue par intégration des vitesses mesurées :
+				\eq{
+					\mat{b^x_\tau \\ b^y_\tau} = \mat{b^x_{0} \\ b^y_{0}} + \tau \mat{\dot{b}^x_0 \\ \dot{b}^y_0}
+				}
+				avec $\tau$ la période d'échantillonage de la mesure des $\beta_i$.
+				
+				Nous pouvons réaliser une intégration d'Euler afin d'observer la position de la base mobile car les vitesses capteur $\beta_i$ des roues sont mesurées sans aucun décalage.
+				Ainsi, l'intégration d'Euler appliquée aux vitesses de la base mobile ne dérive pas dans le temps.
+				
+			\subsubsection{Accélération du CoM de la base mobile}
+			\label{section.observation_acc_base}
+				Concernant l'observation de l'accélération de la base mobile, le bruit de quantification apporté par une dérivation d'Euler de la vitesse mesurée ne nous permet pas d'obtenir une valeur utilisable.
+				La solution qui a été choisie est d'utiliser l'équation d'état \rf{eq.dynamique_ordre_3} conjointement à la sortie de la loi de commande $X$ calculé au pas de temps précédent :
+				\eq{
+					\ddot{b}^x_\tau = \tau\dddot{B}(0) + \mat{0 & 0 & 1}\hat{b}_0
+				}
+				où $*(0)$ correspond à la première valeur du vecteur $*$.
+				
+				Si la commande $\dddot{B}(0)$ est bien réalisée par les moteurs, et en l'absence de perturbations, alors l'accélération observée $\ddot{b}^x_\tau$ correspond exactement à la valeur réelle.
+				Les informations des erreurs générées par les perturbations vont cependant arriver avec un certain retard, dépendant des observations aux instants précédents de $b^x$ et $\dot{b}^x$.
+				
+		\subsection{Observation de l'état du CoM du corps du robot}
+			\subsubsection{Position du CoM du corps du robot}
+			
+				Le corps du robot étant mécaniquement lié à la base mobile, on peut composer la position de son CoM en utilisant sa posture et la position du CoM de la base mobile $b$ :
+				\eq{
+					c = b + \delta_c
+				}
+				Où $\delta_c = c-b$, correspond aux informations apportées par la posture du robot.
+				
+				En utilisant le modèle géométrique du robot, ainsi que les capteurs de position articulaire, nous pouvons directement mesurer la valeur $\delta_c$.
+				Cette mesure est valable tant que le modèle géométrique correspont au corps du robot. Ainsi, les déformations pouvant apparaître dans la structure du robot ne sont pas prises en compte.
+		
+			\subsubsection{Vitesse et accélération du CoM de la base mobile}
+			
+				Nous ne disposons d'aucune mesure de vitesse et d'accélération. 
+				De plus, dériver directement la position du robot $c$ apporte beaucoup trop de bruit de quantification.
+				Nous allons procéder de la même manière qu'en section \rf{section.observation_acc_base}, en utilisant l'équation d'état \rf{eq.dynamique_ordre_3} et la commande $X$ :
+				\eqa{
+					\dot{c}^x_\tau &= \frac{\tau^2}{2}\dddot{C}(0) + \mat{0 & 1 & \tau}\hat{c}_0 \\
+					\ddot{c}^x_\tau &= \tau\dddot{C}(0) + \mat{0 & 0 & 1}\hat{c}_0
+				}
+				
+			
 		\subsection{Observation de l'angle de basculement et d'inclinaison du sol}
 		\label{section.mesure_tilt_pente}
+		
+			Le capteur disponible permettant d'oserver l'angle de basculement et l'inclinaison du sol est la centrale inertielle disposée dans la base mobile.
+			Le problème principal étant que ce capteur ne peut mesure que la somme des deux angles et vitesses angulaires.
+			Sans utilisation d'\textit{a priori}, le système est donc non observable.
 			
-			- Système de base non observable. On mesure la somme des deux angles avec les accéléros, et la somme des variations angulaire avec les gyro.
-
-			- Pas de capteurs de force sur les roues. On ne sait pas lesquelles sont au sol.
-
-			- Il faut faire des hypothèses pour rendre le système observable
-
-			- Problèmes : Non-détections et faux-positifs
-
-			- Considère que lorsque l'angle est constant, alors on est sur une pente
-
-			- Sinon, toute variation de l'angle est considéré comme un push
-
-			- Problèmes si on perturbe le robot avec une dynamique lente
+			Dans le chapitre \rf{chapitre.modele}, nous avons fait l'hypothèse d'une inclinaison du sol constante.
+			Afin de rendre le système observable, nous allons donc définir les \textit{a priori} suivants :
+			\liste{
+				\item Lorsque la vitesse anglaire mesurée est nulle durant un temps minimum défini, on considère l'angle de basculement nul également. L'angle mesuré par la centrale inertielle correspond alors à l'inclinaison du sol.
+				\item Lorsque la vitesse angulaire mesurée est non-nulle durant un temps minimum défini, on considère l'inclinaison du sol constante. L'angle et la vitesse angulaire mesurés correspondent donc au basculement du robot.
+			}
+			
+			Deux cas limites émergent de ces \textit{a priori} :
+			\liste{
+				\item A cause du bruit capteur sur les gyromètres, si l'on amène le robot à basculer suffisamment lentement afin que la vitesse angulaire soit inférieure au bruit, alors il n'est pas possible de savoir que le robot est en train de basculer.
+				      Cela peut être résolu par un capteur de force sur chaque roue, permettant de connaître exactement quelle roue est en l'air, et lesquelles sont au sol.
+				      Dans notre cas, on suppose que cela n'arrive pas.
+				\item Pendant le moment où le robot monte une pente, celle-ci est confondue avec un basculement, ce qui peut générer une commande non correcte du robot (accélération de la base mobile dans le sens descendant de la pente).
+				      Cela est résolue par la temporisation minimum a partir duquel le robot change d'{a priori}, en considérant que le profil spatial d'inclinaison du sol est à variation nulle par morceaux 
+				      (les changements d'inclinaison du sol sont spatialement instantanés, ce qui est le cas de la majorité des pentes que l'on peut croiser dans l'environement urbain).
+				      
+			}
+			
+			Mis à part ces deux cas limites, l'utilisation de ces \textit{a priori} permet d'observer simultanément l'angle de basculement et l'inclinaison du sol.
+			Concernant la vitesse angulaire, celle-ci est directement extraite à partir des gyromètres, préalablement filtrés.
+			Quant-à l'angle de basculement/d'inclinaison, celui-ci est calculé en utilisant un algorithme présenté dans l'article \rf{}
+			
 
 			
