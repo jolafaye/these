@@ -5,6 +5,10 @@
 		Nous présenterons dans un premier temps les différentes valeurs à observer, puis la liste des capteurs diponibles sur la plate-forme expérimentale.
 		Ensuite de quoi, nous détaillerons les méthodes de mesures ainsi que les observateurs permettant de réaliser cela. 
 		Enfin, nous discuterons des conséquences de chaque méthode sur la stabilité et le comportement final du robot.
+		
+		Les observateurs présentés dans ce chapitre ont été implémentés directement sur la plate-forme expérimentale. 
+		Les performances obtenues sur le robot n'étant pas limités par ceux-ci, ils ont volontairement été réalisés de façon simple.
+		Le contenu de ce chapitre sera donc court, et ne traitera pas en détail de problématiques comme les bruits capteurs ou l'impact des incertitudes du modèle du robot sur les observations.
 	
 	\section{Valeurs à observer et capteurs disponibles}
 	
@@ -29,6 +33,7 @@
 
 	\section{Méthodes de mesure et conséquences}
 		\subsection{Observation de l'état du CoM de la base mobile}
+		
 		\label{section.observateurbase}	
 			\subsubsection{Vitesse du CoM de la base mobile}
 			
@@ -53,8 +58,8 @@
 				}
 				avec $\tau$ la période d'échantillonage de la mesure des $\beta_i$.
 				
-				Nous pouvons réaliser une intégration d'Euler afin d'observer la position de la base mobile car les vitesses capteur $\beta_i$ des roues sont mesurées sans aucun décalage.
-				Ainsi, l'intégration d'Euler appliquée aux vitesses de la base mobile ne dérive pas dans le temps.
+				Le défaut de cette approche est une dérive de la position du robot dans le temps. 
+				Afin de compensser cette dérive lorsque le robot est immobile, principalement à cause du bruit capteur, un filtre en amplitude à été ajouté, ignorant les mesures de faible amplitude.
 				
 			\subsubsection{Accélération du CoM de la base mobile}
 			\label{section.observation_acc_base}
@@ -67,6 +72,8 @@
 				
 				Si la commande $\dddot{B}(0)$ est bien réalisée par les moteurs, et en l'absence de perturbations, alors l'accélération observée $\ddot{b}^x_\tau$ correspond exactement à la valeur réelle.
 				Les informations des erreurs générées par les perturbations vont cependant arriver avec un certain retard, dépendant des observations aux instants précédents de $b^x$ et $\dot{b}^x$.
+				
+				On peut noter que les accéléromètres présents dans la base mobile ne permettent pas de mesurer correctement $\ddot{b}$ car ceux-ci sont trop bruités.
 				
 		\subsection{Observation de l'état du CoM du corps du robot}
 			\subsubsection{Position du CoM du corps du robot}
@@ -118,7 +125,7 @@
 			
 			Mis à part ces deux cas limites, l'utilisation de ces \textit{a priori} permet d'observer simultanément l'angle de basculement et l'inclinaison du sol.
 			Concernant la vitesse angulaire, celle-ci est directement extraite à partir des gyromètres, préalablement filtrés.
-			Quant-à l'angle de basculement/d'inclinaison, celui-ci est calculé en utilisant un algorithme présenté dans l'article \rf{}
+			Quant-à l'angle de basculement/d'inclinaison, celui-ci est calculé en utilisant un algorithme présenté dans l'article %\rf{}
 			
 
 			

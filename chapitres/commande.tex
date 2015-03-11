@@ -198,6 +198,7 @@
 				Le choix de cet ordre va être déterminé par la criticité de chaque contrainte vis à vis de l'équilibre et du comportement général du robot.
 				
 				
+				
 				Dans les sections suivantes, nous écrirons les contraintes linéarisées de la façon suivante :
 				\eq{
 					v^-_i \leq V_iX \leq v^+_i
@@ -280,6 +281,7 @@
 				Ces contraintes étant non-linéaires, nous avons choisi de les approximer simplement par un carré, car, contrairement aux contraintes sur le CoP, celles-ci ne sont pas critiques concernant la stabilité du robot.
 				Ainsi, même si les contraintes linéaires résultantes sont significativement non-conservatives par rotation du robot, cela n'impacte que de façon mineure le comportement de la commande.
 				Cette solution est donc préférable, du point de vue du temps de calcul de la commande, au choix d'un polygone d'ordre plus élevé.
+				
 				
 				Les contraintes linéarisées s'expriment donc de la façon suivante :
 					\eq{
@@ -750,28 +752,28 @@
 			On suppose dans un premier temps que le robot a une accélération angulaire constante dépendant uniquement de la gravité et de l'angle actuel de basculement :
 			\eq{
 			\label{eq.ddot_psi_estimateur}
-				\ddot{\psi} = \frac{g^z}{h_b}\cos\prt{\psi_0+$atan$\prt{\dfrac{h_b}{d_k}}}
+				\ddot{\psi} = -\frac{g^z}{h_b}\cos\prt{\psi_0+$atan$\prt{\dfrac{h_b}{d_k}}}
 			}
 			
 			A l'aide de l'équation \rf{eq.ddot_psi_estimateur}, on peut écrire l'évolution de l'angle de basculement au cours du temps :
 			\eq{
-				\psi = \frac{g^z\cos\prt{\psi_0+$atan$\prt{\dfrac{h_b}{d_k}}}}{2l}t^2+\dot{\psi}_0t+\psi_0
+				\psi = -\frac{g^z\cos\prt{\psi_0+$atan$\prt{\dfrac{h_b}{d_k}}}}{2h_b}t^2+\dot{\psi}_0t+\psi_0
 			}
 			
 			En résolvant l'équation quadratique associée, pour $\psi=0$, on peut déterminer si le robot va impacter le sol, et si oui, estimer quel va être la vitesse angulaire d'impact.
 			Soit $\Delta$ tel que :
 			\eq{
-				\Delta = \dot{\psi}_0^2-\dfrac{2g^z\psi_0\cos\prt{\psi_0+$atan$\prt{\dfrac{h_b}{d_k}}}}{h_b}
+				\Delta = \dot{\psi}_0^2+\dfrac{2g^z\psi_0\cos\prt{\psi_0+$atan$\prt{\dfrac{h_b}{d_k}}}}{h_b}
 			}
 			
-			Si $\Delta<0$, le robot va tomber et il n'y aura pas d'impact de la roue en l'air sur le sol. On peut noter que cela ne peut arriver que si $\psi_0 > \frac{\pi}{2}-$atan$(\frac{l}{d})$.
+			Si $\Delta<0$, le robot va tomber et il n'y aura pas d'impact de la roue en l'air sur le sol.
 			Dans le cas contraire, le temps d'impact $t_i$ est calculé de la manière suivante :
 			\eq{
-				t_i = \dfrac{l(\dot{\psi}_0\pm \sqrt{\Delta})}{g^z}
+				t_i = \dfrac{h_b(\dot{\psi}_0\pm \sqrt{\Delta})}{g^z\cos\prt{\psi_0+$atan$\prt{\dfrac{h_b}{d_k}}}}
 			}
 			et la vitesse d'impact estimée $\dot{\psi}_i$ est :
 			\eq{
-				\dot{\psi}_i = \dfrac{g^zt_i}{l}\cos\prt{\psi_0+$atan$\prt{\dfrac{h_b}{d_k}}}+\dot{\psi}_0
+				\dot{\psi}_i = -\sqrt{\Delta}
 			}
 
 	\section{Vers une modélisation unifiée des deux dynamiques}
