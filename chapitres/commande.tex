@@ -4,7 +4,7 @@
 	
 		L'objectif de ce chapitre est de présenter la loi de commande permettant de réaliser les mouvements et l'équilibre d'un robot humanoïde à roues omnidirectionnelles.
 		Dans le chapitre \rf{chapitre.modele}, nous avons développé un modèle du robot utilisant deux corps.
-		Les contraintes de complémentarités dues aux forces de contact nous ont emmené à modéliser le robot en deux parties : lorsque celui-ci possède ses trois roues en contact avec le sol, et lorsqu'il bascule sur deux de ses roues.
+		Les contraintes de complémentarités dues aux forces de contact nous ont amené à modéliser le robot en deux parties : lorsque celui-ci possède ses trois roues en contact avec le sol, et lorsqu'il bascule sur deux de ses roues.
 		Ensuite de quoi, nous avons montré qu'il est important de modéliser la dynamique dans le futur à cause des contraintes sur le CoP, qui limitent fortement les mouvements réalisables par le robot.
 		Enfin, deux équations prédictives de la dynamique ont été formulées :
 		\liste{
@@ -12,7 +12,7 @@
 			\item Dans le cas où le robot bascule sur deux roues, l'équation \rf{eq.dyn_tilt_pred} exprime la dynamique de l'angle de basculement en fonction de celle des corps du robot.
 		}
 		
-		Nous avons donc choisi de réaliser une loi de commande optimale basée sur un modèle prédictif linéaire en les variables de commande, soumis à des contraintes linéaires.
+		Nous avons donc choisi de réaliser une loi de commande optimale basée sur un modèle prédictif linéaire vis à vis des variables de commande, soumis à des contraintes linéaires.
 		La fonction objectif de cette commande optimale est basée sur la minimisation d'une norme d'ordre $2$, permettant la convergence d'une grandeur d'erreur vers $0$, utilisés notamment dans une tâche de suivi de trajectoire.
 		
 		L'interêt de l'aspect prédictif de cette commande est de pouvoir utiliser les connaissances que l'on a sur le comportement dynamique du système ainsi que sur les mouvements demandés, pour prévoir et adapter en avance les trajectoires résultantes.
@@ -27,14 +27,14 @@
 		Une méthode de résolution numérique du problème doit donc être envisagée.
 		
 		Nous avons donc choisi d'utiliser la méthode de la programmation quadratique sous contraintes linéaires (QP).
-		Cette méthode de formulation d'un problème d'optimisation permet de minimiser une fonction objectif quadratique en les variables d'optimisation, celles-ci étant soumises à des contraintes d'inégalités linéaires :
+		Cette méthode de formulation d'un problème d'optimisation permet de minimiser une fonction objectif quadratique vis à vis des variables d'optimisation, celles-ci étant soumises à des contraintes d'inégalités linéaires :
 		\eq{
 			\lst{
 				\min\limits_x \prt{\tr{x}Qx+\tr{\rho}x} \\
 				v^- \leq Vx \leq v^+
 			}
 		}
-		avec $x$ le vecteur des variables d'optimisation, $Q$ la matrice hessienne, $\rho$ le vecteur linéaire, $V$ la matrice des contrainte et $v^+$ et $v^-$ les vecteurs des bornes des contraintes.
+		avec $x$ le vecteur des variables à optimiser, $Q$ la matrice hessienne, $\rho$ le vecteur linéaire, $V$ la matrice des contrainte et $v^+$ et $v^-$ les vecteurs des bornes des contraintes.
 		
 		Une fois le problème posé, un solveur de QP permet, en temps réel, de calculer la solution du problème de minimisation en un certain nombre d'itérations, dépendant principalement des contraintes.
 		L’annexe \rf{annexe.qp} détaille les méthodes de résolutions d'un problème quadratique.
@@ -67,13 +67,13 @@
 				Lorsque les trois roues sont en contact avec le sol, nous pouvons définir trois objectifs de commande :
 				\liste{
 					\item Assurer le suivi d'une trajectoire de référence. Nous avons fait le choix d'un asservissement position/vitesse de la trajectoire de la base mobile.
-					\item Assurer une bonne robustesse aux perturbations. Cet objectif consiste à conserver le meilleur potentiel d'action du robot.
+					\item Assurer une bonne robustesse aux perturbations. Cet objectif consiste à accroitre le potentiel d'action du robot.
 					      Ce potentiel d'action est limité par les contraintes sur le CoP $D^{xy}$, ainsi que les contraintes cinématiques entre le corps du robot et la base mobile.
 					      En optimisant au plus loin possible le CoP $D^{xy}$ ainsi que le CoM $C^{xy}$ du corps du robot de leurs contraintes respectives, nous assurons une robustesse optimale face à une perturbation inconnue.
 					\item Assurer la stabilité numérique de la commande optimale. Cela peut être réalisé en minimisant le carré des variables de commande $X$.
 				}
 				
-				Dans la suite, nous noterons $O_i$ l'objectif $i$. Il correspond à la norme élevée au carré d'une fonction des variables de commande. Il s'écrit de la façon suivante :
+				Dans la suite, nous noterons $O_i$ l'objectif $i$. Il correspond à la norme élevée au carré d'une fonction linéaire des variables de commande. Il s'écrit de la façon suivante :
 				\eq{
 					O_i = \frac{1}{2}\norm{f_i(X)}^2
 				}
@@ -192,7 +192,7 @@
 				La commande ne prend pas en compte la rotation du robot autour de l'axe $\vec{z}$, qui modifie la forme des contraintes.
 				Nous allons donc systématiquement dans la suite réduire celle-ci de façon conservative à un cercle, qui est invariant par rotation autour de son centre.
 				
-				Enfin, une contrainte circulaire étant quadratique, elle ne peut pas s'exprimer directement à l'aide d'inégalités linéaires.
+				Enfin, une contrainte circulaire étant non-linéaire, elle ne peut pas s'exprimer directement à l'aide d'inégalités linéaires.
 				La dernière étape afin de formaliser la contrainte va être de la réduire à un polygone, de façon conservative également.
 				L'ordre de ce polygone va impacter sur le temps de calcul de la commande : Plus celui-ci est grand, plus on est proche d'une contrainte invariante par rotation, mais plus le temps de calcul est grand.
 				Le choix de cet ordre va être déterminé par la criticité de chaque contrainte vis à vis de l'équilibre et du comportement général du robot.
@@ -399,7 +399,7 @@
 					\item Assurer la stabilité numérique de la commande optimale. Cela peut être réalisé en minimisant le carré des variables de commande $X'$.
 				}
 				
-				Dans la suite, nous noterons $O'_i$ l'objectif $i$. Il correspond à la norme élevée au carré d'une fonction des variables de commande. Il s'écrit de la façon suivante :
+				Dans la suite, nous noterons $O'_i$ l'objectif $i$. Il correspond à la norme élevée au carré d'une fonction linéaire des variables de commande. Il s'écrit de la façon suivante :
 				\eq{
 					O'_i = \frac{1}{2}\norm{f'_i(X)}^2
 				}
@@ -501,7 +501,7 @@
 				\subsubsubsection{Contraintes de non-pénétration dans le sol}
 				
 					La présence du sol fait que l'angle de basculement $\Phi$ ne peut pas etre négatif.
-					Cette contrainte est directement linéaire en les variables de commande et s'exprime ainsi :
+					Cette contrainte est directement linéaire vis à vis des variables de commande et s'exprime ainsi :
 					\eq{
 						\Phi \ge 0
 					}
@@ -568,7 +568,7 @@
 						\label{fig.ctr_body_tilt}
 					}
 					
-					De façon identique à la section \rf{section.ctr_body_3_roues}, on défini la contrainte entre le CoM du corps du robot $C$ et celui de la base mobile $B$ par un rectangle de dimensions $(k^x, k^y)$ centré en $b$.
+					De façon identique à la section \rf{section.ctr_body_3_roues}, on définit la contrainte entre le CoM du corps du robot $C$ et celui de la base mobile $B$ par un rectangle de dimensions $(k^x, k^y)$ centré en $b$.
 					
 					Soit $k^n$ la distance du segment reliant le centre de la base mobile $B$ et le point d'intersection entre la droite définie par le vecteur $\vec{n}_k$ et d'origine $B$ avec le rectangle de la contrainte. $k^n$ s'exprime de la façon suivante \rfi{fig.ctr_body_tilt} :
 					\eq{
@@ -620,7 +620,7 @@
 			Il faut donc adjoindre aux deux précédents contrôleurs un troisième permettant de gérer cet état. Nous choisissons d'utiliser le jeu de variable $X$.
 			Les objectifs choisis sont :
 			\liste{
-				\item $O_3$ et $O_4$. Contrôler le CoP au milieu de la base en utilisant le modèle de robot sur trois roues permet d'assurer au robot de ne pas accroitre son angle de basculement.
+				\item $O_3$ et $O_4$. Contrôler le CoP au milieu de la base en utilisant le modèle de robot sur trois roues permet d'assurer au robot de ne pas accroître son angle de basculement.
 				      Cet objectif permet de contrôler le moment angulaire du robot autour de son axe de rotation afin qu'il soit toujours dirigé vers la bonne direction, lorsque celui-ci est proche du sol.
 				\item $O_5$. Assurer la stabilité numérique de l'algorithme est toujours indispensable.
 			}
@@ -665,17 +665,24 @@
 		\label{section.superviseur}
 		\subsection{Choix d'un superviseur et conséquences}
 		
+			\fig{
+				\centering
+				\includegraphics[width=6.5in]{tilt_process.png}
+				\caption{Présentation du changement des états du superviseur au cours du temps.}
+				\label{fig.tilt_process}
+			}
+			
 			L'objectif est maintenant de définir un moyen permettant de choisir quel contrôleur parmi les trois proposés en sections \rf{section.mpc_trois_roues}\rf{section.mpc_deux_roues}\rf{section.mpc_transition} doit être activé afin de commander le robot.
-			Nous avons fait le choix d'un superviseur basé sur une machine a états et d'une heuristique de transition entre ces états.
+			Nous avons fait le choix d'un superviseur basé sur une machine a états et d'une heuristique de transition entre ces états \rfi{fig.tilt_process}.
 		
 			Les avantages de ce type de superviseur sont qu'il est facile à implémenter ainsi qu'à en faire évoluer les paramètres associés aux heuristiques de transition.
 			De plus, ce type de superviseur permet de gérer de façon simple les transitions de modes dynamiques ainsi que les impacts.
 			
-			Les inconvénient sont le fait que l'utilisation d'heuristiques rend le comportement du robot non-optimal à une situation donné.
+			Les inconvénients sont le fait que l'utilisation d'heuristiques rend le comportement du robot non-optimal à une situation donnée.
 			De plus, si celles-ci sont mal choisies, son comportement peut être contraire aux objectifs de commande et impacter négativement son équilibre. 
 			Nous verrons notament les conséquences de l'utilisation d'heuristiques de transitions au chapitre \rf{chapitre.resultats}
 			
-			Dans la suite, il est important de prendre en compte au fait que certaines heuristiques ont été faites pour prendre en compte les perturbations les plus communes qu'un humain peut appliquer à la plate-forme expérimentale.
+			Dans la suite, il est important de prendre en compte le fait que certaines heuristiques ont été faites pour prendre en compte les perturbations les plus communes qu'un humain peut appliquer à la plate-forme expérimentale.
 			
 		\subsection{Fonctionnement du superviseur}
 
@@ -717,7 +724,7 @@
 					Cela signifie que le robot va compenser passivement la perturbation et ne pas générer un impact trop élevé. 
 					Dans ce cas, le mieux est de stopper le suivi de trajectoire, ainsi que de limiter le déplacement du robot dans l'axe de basculement, ce qui correspond bien au contrôleur de l'état \textit{Landing}.
 					
-					\item Dans tout les autres cas, le superviseur reste dans l'état \textit{No tilt}, car il n'est pas en train de basculer.
+					\item Dans tous les autres cas, le superviseur reste dans l'état \textit{No tilt}, car il n'est pas en train de basculer.
 				}
 				
 			\subsubsection{Les transitions depuis l'état \textit{Tilt}}
@@ -810,7 +817,7 @@
 		Celle-ci se base sur trois sous-lois de commandes optimales utilisant le formalisme de la programmation quadratique et supervisées par une machine a état.
 		Ces trois lois permettent de contrôler le robot dans des situations différentes :
 		\liste{
-			\item Lorsque le robot est en contact sur le sol avec ces trois roues.
+			\item Lorsque le robot est en contact sur le sol avec ses trois roues.
 			\item Lorsque le robot bascule sur deux roues.
 			\item Lorsque le robot va impacter le sol.
 		}

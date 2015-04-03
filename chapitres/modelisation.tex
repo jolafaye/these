@@ -33,7 +33,7 @@
 			\item 	Les différentes élasticités. Les technologies d'actionnement utilisées sur la plate-forme expérimentale ne comportent pas d'élasticités notables.
 				Le seul élément compliant est un ensemble de deux bandes élastiques attachées à l'articulation du roulis de la hanche permettant au robot de maintenir une posture droite en l'absence de contrôle du moteur.
 				Cet élément est négligeable en terme de dynamique car la raideur associée est très faible.
-			\item	Les jeux mécaniques présents sur le robot. Ceux-ci sont présents sur la plate-forme expérimentale, du fait du systèmes de réduction entre les moteurs et les articulations basés sur des engrenages.
+			\item	Les jeux mécaniques présents sur le robot. Ceux-ci sont présents sur la plate-forme expérimentale, du fait des systèmes de réduction entre les moteurs et les articulations basés sur des engrenages.
 				Les effets dynamiques parasites apportés par le jeu mécanique ne sont pas négligeables.
 				Cependant, il peuvent être compensés de manière suffisamment efficace (plus de détails en section \ref{section.closedloop}) pour que cela soit transparent du point de vue de la commande présentée dans le chapitre \ref{chapitre.commande}.
 			\item	Les glissements pouvant survenir entre les roues du robot et le sols ne sont pas modélisés. 
@@ -56,7 +56,10 @@
 				On considère le robot modélisé par deux corps $\bar{b}$ et $\bar{c}$ de masse associée $m_b$ et $m_c$. 
 				Ces corps sont en contact avec le sol par l'intermédiaire de trois points $p_f$, $p_r$ et $p_l$ correspondant aux trois points de contact des roues avec le sol \rfi{fig.bascule}.
 				La roue avant gauche correspond au point $p_r$, la roue avant droite au point $p_l$ et la roue arrière au point $p_f$.
-				On considère que le système peut se retrouver dans quatre mode dynamique différents :
+				(On associe l'indice $r$, $f$ et $l$ au sens du basculement, la roue en l'air lors de ce basculement correspond. Pour un basculement vers la droite, la roue en l'air correspond à la roue avant gauche.)
+				
+				
+				On considère que le système peut se retrouver dans quatre modes dynamiques différents :
 				\liste{
 					\item Le robot ne bascule pas et les trois roues sont en contact avec le sol.
 					\item Le robot est en rotation vers l'avant autour de l'axe défini par les deux roues avant. On note l'angle de rotation $\psi_f$. La roue arrière est dans ce cas en l'air.
@@ -93,7 +96,7 @@
 					
 					Premièrement, nous considérons que la position des corps $\bar{c}$ et $\bar{b}$ est obtenue par la composition de trois éléments :
 					\liste{
-						\item $r$, la position générale du centre du robot exprimée dans le repère $\rep_w$.
+						\item $r$, la position générale du centre géométrique de la base mobile projeté sur le sol et exprimée dans le repère $\rep_w$.
 						\item $\delta_c$ et $\delta_b$, les longueurs apportées par l'actionnement des moteurs.
 						\item $\psi_f$, $\psi_r$ et $\psi_l$, les rotations apportées par le basculement du robot sur chacun de ses cotés.
 					}
@@ -103,22 +106,31 @@
 					
 					$\forall i\in\{f,r,l\}$ :
 					
-					On note $\theta_i$ l'angle dans le plan $(\vec{x}, \vec{y})$ que fait la droite reliant le centre du robot et la roue $i$ avec l'axe $\vec{x}$ \rfi{fig.bascule}:
+					On note $\theta_i$ l'angle dans le plan $(\vec{x}, \vec{y})$ que fait la droite reliant le centre de la base mobile et la roue $i$ avec l'axe $\vec{x}$ \rfi{fig.bascule}:
 					\eq{
-						\cos(\theta_i)= \overrightarrow{r^{xy}p_i^{xy}} \cdot \vec{x}
+						\cos(\theta_i)= \overrightarrow{rp_i} \cdot \vec{x}
 					}
 					
-					On note $d_i$ la distance dans le plan $(\vec{x}, \vec{y})$ entre le centre du robot $r$ et la position $p_i$ de la roue $i$ \rfi{fig.lagrange}:
-					\eq{
-						d_i = \norm{\overrightarrow{r^{xy}~p_i^{xy}}}
-					}
-					
-					On note  $\vec{n_i}$ l'axe défini par la droite reliant le centre du robot et la roue $i$, et $\vec{t_i}$ son axe orthogonal inclus dans le plan $(\vec{x}, \vec{y})$ :
+						
+					On note  $\vec{n_i}$ l'axe défini par la droite reliant le centre de la base mobile $r$ et la roue $i$, et $\vec{t_i}$ son axe orthogonal inclus dans le plan $(\vec{x}, \vec{y})$ :
 					\eqa{
-						\vec{n_i} &= \frac{\overrightarrow{r^{xy}~p_i^{xy}}}{d_i} \\
+						\vec{n_i} &= \frac{\overrightarrow{r^{xy}~p_i^{xy}}}{\norm{\overrightarrow{r^{xy}~p_i^{xy}}}} \\
 						\vec{t_i} &= \vec{z} \times \vec{n_i}
 					}
 					$\rep_i$ représente le repère $(O, \vec{n}_i, \vec{t}_i, \vec{z})$.
+					
+					On note $D_i$ la distance entre la position $p_i$ de la roue $i$ et la position de la projection des deux autres roues sur l'axe $\vec{n_i}$ 
+					(les deux points projetés sont confondus sur l'axe $\vec{n_i}$ car le triangle formé par la base mobile est équilatéral) \rfi{fig.lagrange}:
+					\eq{
+					  D_i = \norm{p_i - p_j \cdot \vec{n_i}}
+					}
+					avec $j\in\{f,r,l\} \neq i$.
+					
+					On note $d_i$ la distance dans le plan $(\vec{x}, \vec{y})$ entre le centre de la base mobile $r$ et la projection des deux autres roues sur l'axe $\vec{n_i}$ \rfi{fig.lagrange}:
+					\eq{
+						d_i = D_i - \norm{\overrightarrow{r^{xy}~p_i^{xy}}}
+					}
+					
 					
 					On note $h_b$ et $h_c$ les hauteurs initiales de $\bar{b}$ et $\bar{c}$ (lorsque $\delta_c=\delta_b=0$ et $\psi_f=\psi_r=\psi_l=0$) \rfi{fig.lagrange}.
 					On introduit $c_0$ et $b_0$ les positions des corps $\bar{b}$ et $\bar{c}$ à leurs positions initiales \rfi{fig.bascule}:
@@ -161,14 +173,15 @@
 				\subsubsubsection{Equations cinématiques}
 					
 					Nous pouvons à présent écrire les équations cinématiques des points de contact des roues $p_f$, $p_r$ et $p_l$ \rfi{fig.lagrange}.
-					
 					$\forall i\in\{f,r,l\}$ :
+					la position du point de contact $p_i$ peut s'exprimer comme la rotation d'angle $\psi_i$ et de rayon $D_i$ autour de l'axe défini par les deux autres roues, 
+					puis déplacé par translation de la distance entre cet axe et la position de la base mobile $b$.
 					\eq{
 					\label{eq.p}
 						\lst{
-							p^x_i = b^x+d_i\prt{1-2\cos(\psi_i)}\cos(\theta_{i}) \\
-							p^y_i = b^y+d_i\prt{1-2\cos(\psi_i)}\sin(\theta_{i}) \\
-							p^z_i = b^z-h_b+2d_i\sin(\psi_i)
+							p^x_i = b^x+\prt{d_i-D_i\cos(\psi_i)}\cos(\theta_{i}) \\
+							p^y_i = b^y+\prt{d_i-D_i\cos(\psi_i)}\sin(\theta_{i}) \\
+							p^z_i = b^z-h_b+D_i\sin(\psi_i)
 						}
 					}
 					
@@ -243,9 +256,9 @@
 					\eq{
 					\label{eq.p_appr}
 						\lst{
-							p^x_i \simeq b^x-d_i\cos(\theta_{i}) \\
-							p^y_i \simeq b^y-d_i\sin(\theta_{i}) \\
-							p^z_i \simeq b^z-h_b+2d_i\psi_i
+							p^x_i \simeq b^x+(d_i-D_i)\cos(\theta_{i}) \\
+							p^y_i \simeq b^y+(d_i-D_i)\sin(\theta_{i}) \\
+							p^z_i \simeq b^z-h_b+D_i\psi_i
 						}
 					}
 
@@ -404,7 +417,7 @@
 							0 \\
 							0 \\
 							0 \\
-							2d_f \\
+							D_f \\
 							0 \\
 							0 \\
 						},
@@ -416,7 +429,7 @@
 							0 \\
 							0 \\
 							0 \\
-							2d_r \\
+							D_r \\
 							0 \\
 						},
 						\frac{\partial p_l^z}{\partial q} = \mat{
@@ -428,7 +441,7 @@
 							0 \\
 							0 \\
 							0 \\
-							2d_l \\
+							D_l \\
 						}
 					}
 					
@@ -488,9 +501,9 @@
 							0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
 							0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
 							0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
-							0 & 0 & 0 & 0 & 0 & 0 & 2d_f & 0 & 0 \\
-							0 & 0 & 0 & 0 & 0 & 0 & 0 & 2d_r & 0 \\
-							0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 2d_l \\
+							0 & 0 & 0 & 0 & 0 & 0 & D_f & 0 & 0 \\
+							0 & 0 & 0 & 0 & 0 & 0 & 0 & D_r & 0 \\
+							0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & D_l \\
 						}
 					}
 					
@@ -538,7 +551,7 @@
 				
 				
 				
-				Sans ces contraintes, il aurait été possible de résoudre analytiquement les équations temporelles du mouvement. Cependant, la présence de celles-ci imposent une résolution particulière.
+				Sans ces contraintes, il aurait été possible de résoudre analytiquement les équations temporelles du mouvement. Cependant, la présence de celles-ci impose une résolution particulière.
 				Une première approche, qui sera développée dans les sections suivantes, est d'énoncer d'autres \textit{a priori} afin de fixer le problème de complémentarité
 				(par exemple, en considérant que le robot n'est pas en possibilité de basculer, ou est en état de basculement sur un axe). 
 				
@@ -555,7 +568,7 @@
 				Il est donc pertinent de modéliser le système dynamique dans le cas où les trois roues sont en contact avec le sol, 
 				car en l'absence de forte perturbations, le contrôleur développé en section \rf{section.mpc_trois_roues} assure cette hypothèse.
 			
-				Définir le fait que le robot est en contact avec le sol avec ces trois roues permet de résoudre le problème de complémentarité de la façon suivante :
+				Définir le fait que le robot est en contact avec le sol avec ses trois roues permet de résoudre le problème de complémentarité de la façon suivante :
 				\eq{
 					\psi_{f} = \psi_{r} = \psi_{l} = 0
 				}
@@ -606,7 +619,7 @@
 			
 				Dans le cas d'un système dont les positions des forces de contact sont définis sur un plan, il est possible de définir une grandeur nommé Centre de Pression (CoP) $d^{xy}$.
 				Le CoP correspond au point dans le plan où le moment angulaire de la résultante des forces de contact est nul.
-				La propriété essentielle du CoP est que celui-ci est toujours défini à l'intérieur du polygone de l'enveloppe convexe définie par la position des forces de contact.
+				La propriété essentielle du CoP est que celui-ci est toujours inclus à l'intérieur du polygone de l'enveloppe convexe définie par la position des forces de contact.
 				Cela est dû aux contraintes de non-pénétration dans le sol des forces de contact \rf{eq.force_contrainte_trois_roues}.
 				Lorsque le CoP est strictement à l'intérieur de ce polygone de support, le robot ne peut pas basculer sur deux roues.
 				
@@ -620,7 +633,7 @@
 			
 			\subsubsection{Principe de conservation du moment angulaire}
 			
-				Le modèle de notre robot n'est pas un système fermé. Il n'y a donc pas de conservation du moment angulaire : Le lagrangien n'est pas invariant par rotation.
+				Le modèle de notre robot n'est pas un système fermé. Il n'y a donc pas de conservation du moment angulaire : le lagrangien n'est pas invariant par rotation.
 				Cependant, notre système est soumis à deux types de forces différentes : La première est due à la gravité, et dérive donc d'un potentiel, les secondes sont dues à des efforts de contacts, qui sont des contraintes concernant le système.
 				Il est possible d'exprimer le principe de conservation du moment angulaire dans ce cas là.
 				
@@ -652,7 +665,7 @@
 					m_b(\ddot{b}^z-g^z) + m_c(\ddot{c}^z-g^z) = \somme{i\in\{f,r,l\}}{}{F_i^z}
 				}
 			
-				En utilisant les équations résultantes du principe du moment angulaire autour des axes $\vec{y}$ et $\vec{x}$ \rf{eq.moment_y_trois_roues}\rf{eq.moment_x_trois_roues} ainsi que l'équation \rf{eq.dyn_z_trois_roues}, on peut formuler le CoP de la façon suivante :	
+				En utilisant les équations résultantes du principe de conservation du moment angulaire autour des axes $\vec{y}$ et $\vec{x}$ \rf{eq.moment_y_trois_roues}\rf{eq.moment_x_trois_roues} ainsi que l'équation \rf{eq.dyn_z_trois_roues}, on peut formuler le CoP de la façon suivante :	
 				\eq{
 				\label{eq.cop_trois_roues}
 					d^{xy} = \frac{m_b(\ddot{b}^z-g^z)b^{xy} -m_b(\ddot{b}^{xy}-g^{xy})b^z + m_c(\ddot{c}^z-g^z)c^{xy} - m_c(\ddot{c}^{xy}-g^{xy})c^z}  {m_b(\ddot{b}^z-g^z) + m_c(\ddot{c}^z-g^z)} \\
@@ -696,7 +709,7 @@
 					\forall (i,j)\in\{f,r,l\}, i\neq j\neq k,\lst{\psi_i = \psi_j = 0\\ F_k^{xyz} = 0}
 				}
 				
-				On défini le jeu de variables $q'$ suivant :
+				On définit le jeu de variables $q'$ suivant :
 				\eq{
 					q' = \tr{\mat{b^x & b^y & b^z & c^x & c^y & c^z & \psi_k}}
 				}
@@ -733,8 +746,8 @@
 						0 & 0 & 0 & 0 & 0 & 0 \\
 						0 & 0 & 0 & 0 & 0 & 0 \\
 						0 & 0 & 0 & 0 & 0 & 0 \\
-						0 & 0 & 0 & 0 & 2d_i & 0 \\
-						0 & 0 & 0 & 0 & 0 & 2d_j \\
+						0 & 0 & 0 & 0 & D_i & 0 \\
+						0 & 0 & 0 & 0 & 0 & D_j \\
 					}
 				}
 				
@@ -785,7 +798,7 @@
 			\subsubsection{Simplifications}
 				
 				Les variables commandées sont $c^{xy}$ et $b^{xy}$. Nous allons considérer les même simplifications que celles de la section \rf{section.modelisation_trois_roues} :
-				$b^z$ est constant à la hauteur $h_b$ et on choisit de négliger les déplacements verticaux. $c^z$ est donc supposé constant à la hauteur $h_c$.
+				$b^z$ est constant à la hauteur $h_b$ et on choisit de négliger les déplacements selon l'axe $\vec{z}$. $c^z$ est donc supposé constant à la hauteur $h_c$.
 				
 				Nous allons maintenant considérer que $d_k=0$. Cela correspond à négliger le mouvement vertical apporté par le basculement. 
 				La distance $d_k$ sur le plan $(\vec{x},\vec{y})$ du CoM de la base mobile par rapport à la droite de contact étant faible devant sa hauteur $h_b$, on peut considérer cette approximation valable. 
@@ -818,8 +831,9 @@
 					&- (m_bh_b+m_ch_c)g^y + m_cg^z(c^y-b^y)
 				}
 				
-				Dans le repère $\rep_k(O, \vec{n}_k, \vec{t}_k, \vec{z})$, on peut combiner les deux équations précédentes \rf{eq.model_psi_x}\rf{eq.model_psi_y} sous la forme :
-				\textit{``\rf{eq.model_psi_n}$_{\rep_k}$ $=\cos(\theta_k)$\rf{eq.model_psi_x}$_{\rep_k}+\sin(\theta_k)$\rf{eq.model_psi_y}$_{\rep_k}$''} : 
+				Dans le repère $\rep_k(O, \vec{n}_k, \vec{t}_k, \vec{z})$, on peut combiner les deux équations précédentes \rf{eq.model_psi_x}\rf{eq.model_psi_y}.
+				On multiplie l'équation \rf{eq.model_psi_x} par $\cos(\theta_k)$ puis additionne le résultat à la multiplication de l'équation \rf{eq.model_psi_y} par $\sin(\theta_k)$.
+				On obtient alors l'équation suivante :
 				\eqa{
 					\nonumber
 					-(m_bh_b+m_ch_c)g^z\psi_k - (m_bh_b^2+m_ch_c^2)\ddot\psi_k &= m_bh_b\ddot{b}^{n_k} + m_ch_c\ddot{c}^{n_k} + m_cg^z(c^{n_k}-b^{n_k})\\
@@ -834,8 +848,8 @@
 		\subsection{Nécessité de prédire le futur}
 	
 			L'ensemble des accélérations atteignables par les corps du robot est limité par leurs positions actuelles ainsi que les contraintes sur le CoP. 
-			Plus la distance entre le CoP les limites du polygone de support est faible, plus les accélérations possible sont limitées, sans faire basculer le robot.
-			Également, plus la hauteur des CoMs est grande, plus les accélérations réalisable sont limitées.
+			Plus la distance entre le CoP les limites du polygone de support est faible, plus les accélérations possibles sans faire basculer le robot sont limitées.
+			Également, plus la hauteur des CoMs est grande, plus les accélérations réalisables sont limitées.
 			
 			Il existe deux solutions pour permettre au robot de réaliser de plus grandes accélérations : 
 			abaisser en avance la hauteur des CoM des corps et/ou déplacer leurs positions horizontales en avance. 
@@ -855,7 +869,7 @@
 		\subsection{Choix de la dynamique d'extrapolation}
 
 			La première étape dans la réalisation d'un modèle prédictif est de définir les relations différentielles des corps d'un instant à l'autre.
-			Afin de permettre une résolution numérique du système, et de suivre la volonté de réaliser un modèle linéaire en les variable de contrôle, comme réalisé en section \rf{section.modelisation_dynamique}, 
+			Afin de permettre une résolution numérique du système, et de suivre la volonté de réaliser un modèle linéaire vis à vis des variables de commande, comme réalisé en section \rf{section.modelisation_dynamique}, 
 			nous avons fait le choix d'une dynamique échantillonnée en temps, de période $T$, utilisant la méthode d'Euler de résolution des équations différentielles.
 			De plus, afin d'avoir un comportement lisse du robot, et de rejeter les élasticités parasites, nous avons choisi d'utiliser une dynamique d'ordre 3, permettant une variation continue des forces de contact, et donc du CoP.
 			
@@ -960,9 +974,9 @@
 					\ddot{B}^{xy} &= U_{\ddot{b}}\dddot{B}^{xy} + S_{\ddot{b}}\hat{b}^{xy}
 				}
 				avec $B^{xy}$, $\dot{B}^{xy}$, $\ddot{B}^{xy}$, $\dddot{B}^{xy}$ et $\hat{b}^{xy}$ définis 
-				à la manière des équations \rf{eq.definition_x}\rf{eq.definition_dotx}\rf{eq.definition_ddotx}\rf{eq.definition_dddotx}\rf{eq.hatx}.
+				à la manière des équations \rf{eq.definition_x}\rf{eq.definition_dotx}\rf{eq.definition_ddotx}, \rf{eq.definition_dddotx} et \rf{eq.hatx}.
 				$U_b$, $S_b$, $U_{\dot{b}}$, $S_{\dot{b}}$, $U_{\ddot{b}}$ et $S_{\ddot{b}}$ sont quant à eux définis à la manière des équations 
-				\rf{eq.u_x}\rf{eq.du_x}\rf{eq.ddu_x}.
+				\rf{eq.u_x} \rf{eq.du_x} \rf{eq.ddu_x}.
 				
 				On procède de la même manière pour les variables $c^{xy}$ :
 				\eqa{
@@ -1010,9 +1024,9 @@
 						\ddot{\Psi}_k &= U_{\ddot{\psi}}\dddot{\Psi}_k + S_{\ddot{\psi}}\hat{\psi}_k
 					}
 					avec $\Psi_k$, $\dot{\Psi}_k $, $\ddot{\Psi}_k$, $\dddot{\Psi}_k$ et $\hat{\psi}_k$ définis 
-					à la manière des équations \rf{eq.definition_x}\rf{eq.definition_dotx}\rf{eq.definition_ddotx}\rf{eq.definition_dddotx}\rf{eq.hatx}.
+					à la manière des équations \rf{eq.definition_x}\rf{eq.definition_dotx}\rf{eq.definition_ddotx}, \rf{eq.definition_dddotx} et \rf{eq.hatx}.
 					$U_\psi$, $S_\psi$, $U_{\dot{\psi}}$, $S_{\dot{\psi}}$, $U_{\ddot{\psi}}$ et $S_{\ddot{\psi}}$ sont quant à eux définis à la manière des équations
-					\rf{eq.u_x}\rf{eq.du_x}\rf{eq.ddu_x}.
+					\rf{eq.u_x} \rf{eq.du_x} \rf{eq.ddu_x}.
 					
 					On procède de la même manière pour la variable $c^n$ :
 					\eqa{
@@ -1059,7 +1073,7 @@
 					On peut enfin remarquer que la dérivée troisième de l'angle de basculement $\dddot\Psi$ sur l'horizon de prédiction se formule de manière directe avec les variables de commande $\dddot{B}^n$ et $\dddot{C}^n$
 					si et seulement si $\tilde{U}_\psi$ est inversible.
 				
-					On peut noter que les matrices $U_\psi$ et $U_{\ddot{\psi}}$ sont triangulaire inférieures avec une diagonale constante de valeur respective $\frac{T^3}{6}$ et $T$.
+					On peut noter que les matrices $U_\psi$ et $U_{\ddot{\psi}}$ sont triangulaires inférieures avec une diagonale constante de valeurs respectives $\frac{T^3}{6}$ et $T$.
 					Ainsi, $\tilde{U}_\psi$ étant une somme pondérée par des scalaires de ces deux matrices, elle est inversible si et seulement si :
 					\eq{
 					\label{eq.condition_inversibilite}
@@ -1077,6 +1091,7 @@
 					
 					Notamment, on peut remarquer que la dynamique de basculement n'est plus inversible lorsque le robot se retrouve en position horizontale, car l'équation \rf{eq.condition_g_inversibilite} ne serait plus respectée.
 					De plus, pour des raisons de stabilité numérique, il ne faut pas choisir une période d'échantillonage $T$ proche de la valeur interdite de l'équation \rf{eq.condition_T_inversibilite}.
+					En utilisant les paramètres du robot présenté en annexe \rf{annexe.pepper}, nous obtenons $T \neq 100$,$4$ ms.
 					
 		\subsection{Synthèse}
 		

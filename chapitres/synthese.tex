@@ -1,5 +1,68 @@
 \chapter{Synthèse}
-
 	\section{Contributions}
+	
+	\subsection{Modélisation}
+	  Au cours de cete thèse, nous avons présenté dans un premier temps une modélisation du robot utilisant un modèle à deux masses ponctuelles.
+	  Ces masses permettent de modéliser les CoM de la base mobile et du corps du robot.
+	  Ce modèle à été simplifié en utilisant quatre hypothèses :
+	  \liste{
+	    \item Nous avons considéré que le robot ne pouvait se trouver que sur trois roues, ou basculer sur deux roues. Nous avons ignoré les cas de basculement sur une roue, ainsi que la chute libre.
+	    \item De plus, nous avons considéré que les effets dynamiques induits par la rotation du robot autour de l'axe $\vec{z}$ sont négligeable. Le modèle ne dépend donc pas de la rotation du robot autour de son axe $\vec{z}$.
+	    \item Aussi, nous avons considéré une approximation du premier ordre des angles de basculement $\psi_f$, $\psi_r$ et $\psi_l$.
+	    \item Enfin, nous avons considéré que les deux masses ponctuelles étaient à hauteur constante, et donc ne pouvaient se déplacer que sur un plan parrallèle au sol.
+	  }
+	  
+	  Afin de résoudre \textit{a priori} le problème de complémentarité posé par les contacts des roues avec le sol, nous avons choisi de scinder le modèle général en deux sous-modèles.
+	  Le premier considère que le robot possède ses trois roues en contact avec le sol.
+	  Le second considère que le robot est en train de basculer sur deux de ses roues.
+	  
+	  Concernant le premier sous-modèle, une équation du CoP en a été formulée.
+	  Concernant le second sous-modèle, une équation de la dynamique de basculement en a été formulée.
+	
+	  Enfin, afin de réaliser un modèle prédictif, les deux sous-modèles précédents ont été extrapolés en utisant une dynamique échantillonée polynomiale d'ordre 3.
+	  Il a été également précisé les conditions de validité de cette extrapolation dans le cas de la dynamique de basculement.
+	  Notament, la période d'échantillonage doit être différente d'une valeur dépendante des paramètres du modèle. 
+	
+	\subsection{Loi de commande}
+	
+	  Nous avons ensuite présenté une loi de commande optimale, basée sur la résolution d'un problème quadratique.
+	  La loi de commande dispose d'un superviseur permettant de choisir un contrôleur adapté à chacun des deux modèles.
+	  
+	  Le premier contrôleur permet d'assurer au robot de rester les trois roues en contact avec le sol, tout en contrôlant sa trajectoire ainis que sa robustesse aux perturbations.
+	  Le second contrôleur permet de contrôler le robot lorsqu'il est en train de basculer sur deux roues, en contrôlant son basculement pour le ramener sur trois roues.
+	  
+	  Le superviseur utilise les capteurs disponibles sur le robot afin de prédire l'existance ainsi que la vitesse angulaire de l'impact de la roue en l'air avec le sol.
+
+	\subsection{Résultats}
+	
+	  Nous avons envin présenté diverses expériences sur un robot disposant d'une implémentation de la loi de commande. 
+	  Chacune de ces expériences à pour but de présenter un aspect important de la loi de commande.
+	  
+	  Le premier essai a consisté en un suivi d'une trajectoire de référence non physiquement réalisable.
+	  Nous avons pu montrer que le choix des valeurs des pondérations associées à chaque objectif des contrôleurs influait de manière significative sur le comportement du robot.
+	  Lorsque les pondérations priorisent le suivi de trajectoire, alors celui-ci est optimal, mais la robustesse aux perturbation est médiocre.
+	  A l'inverse, en priorisant la robustesse aux perturbations, alors le suivi de trajectoire devient médiocre.
+	  Nous avons pu également constater l'effet prédictif de la loi de commande, en observant le robot compenser en avance la partie non-réalisable de la trajectoire de référence.
+	  
+	  Le second essai a consisté en en un suivi d'une trajectoire de référence réalisable, lorsque la base mobile est soumise à une perturbation.
+	  Nous avons pu constater les capacité de la loi de commande à compenser cette perturbation.
+	  Il est interessant à noter que le choix relatif des pondérions entre le suivi en position et le suivi en vitesse condition le temps de compensation de la perturbation.
+	  
+	  Le troisième essai a consisté en la compensation du basculement du robot provoqué par une perturbation, lorsque celui-ci est initialement à l'arret.
+	  Nous avons pu constater que le superviseur ne déclenche la compensation active de la perturbation que si l'estimation de la vitesse d'imapct de la roue en l'air est supérieure à une certaine limite.
+	  Aussi, les performances de la compensation du basculement sont fortement limitées par les limites en accélération et en vitesse de la base mobile.
+	  Une perturbation moyenne amène très rapidement les commandes des roues à saturer.
+	  Les performances sont donc dans un premier temps dégradées par l'augmentation de la vitesse d'impact, et enfin par l'absence de posssibilité de ramener le robot sur ses trois roues, ce qui provoque la chute du robot.
+	
+	  Le quatrième essai a consité en la compensation du basculement du robot provoqué par une perturbation, lorsque celui-ci est initialement en mouvement.
+	  Nous avons pu motnrer ici les limites en terme de modélisation de la dynamique de basculement. 
+	  Notament le fait de n'avoir pas considéré de rotation selon l'axe $\vec{z}$ nous oblige à considérer des perturbation uniquement dans la direction du déplacement.
+	  
+	  Le dernier essai a consité à la compensation de variation de l'inclinaison du sol au cours d'un déplacement.
+	  Nous avons pu observer que l'absence de mesure prédictive du sens du vecteur gravité $g$ occasionne un retard dans la compensation effective de la pente.
+	  Cela limite donc la vitesse de franchissement de celle-ci, afin de ne pas générer de mouvement instables, par le retard induit de la mesure de $g$.
+	  Aussi, nous n'avons pas pris en compte les effets dynamiques dues à un changement de sens de $g$, ce qui limite également la vitesse de franchissement de la pente.
+	  
 	\section{Perspectives}
-	\section{conclusion}
+	
+	  

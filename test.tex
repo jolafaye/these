@@ -1,4 +1,4 @@
-\documentclass[12pt]{report}
+\documentclass[10pt]{report}
 
 \input{../macro}
 
@@ -41,82 +41,63 @@
  
 \begin{document}
 
-Soit un point matériel $c$ se déplacant sur une dimension en suivant une dynamique d'ordre 3. 
+Résumés : 4000 caractères max.
 
-Ce point est contraint à se déplacer dans l'intervalle $[-1, +1]$.
+Résumés vulgarisés : 1000 caractères max. Cible : grand public
 
-Ce point à pour objectif de suivre une trajectoire de référence $c^*$ définie sur l'horizon comme suis :
-\eq{
-	C^* = \mat{2 \\ -2 \\ 2 \\ -2 \\ \vdots}
-}
+\section{Résumé en Français}
 
-On écrit une loi de commande prédictive pour ce système :
-\eqa{
-	&\lst{
-		\min\limits_{\dddot{C}}\prt{O(\dddot{C})} \\
-		-1 \leq C \leq 1
-	} \\
-	&O(\dddot{C})=\norm{C-C^*}^2
-}
-avec la relation dynamique :
-\eq{
-	C = U\dddot{C}
-}
-si l'on considère le point $c$ immobile à $t=0$ : $c=\dot{c}=\ddot{c}=0$.
+  La problématique traitée dans cette thèse concerne la commande et l'équilibre des robots humanoïdes disposant d'une base mobile à roues omnidirectionnelles.
+  Les méthodes développées visent à atteindre de hautes performances dynamiques pour ce type de robot, tout en assurant stabilité et équilibre.
 
-Pour un nombre d'échantillons $n=5$:
-\eq{
-	U = \frac{T^3}{6} 
-	\mat{
-		1 & 0 & 0 & 0 & 0 \\
-		4 & 1 & 0 & 0 & 0 \\
-		7 & 4 & 1 & 0 & 0 \\
-		19 & 7 & 4 & 1 & 0 \\
-		37 & 19 & 7 & 4 & 1
-	}
-}
-\eq{
-	U^{-1} = \frac{6}{T^3}
-	\mat{
-		1 & 0 & 0 & 0 & 0 \\
-		-4 & 1 & 0 & 0 & 0 \\
-		9 & -4 & 1 & 0 & 0 \\
-		-27 & 9 & -4 & 1 & 0 \\
-		84 & -27 & 9 & -4 & 1
-	}
-}
+  Les robots humanoïdes ont en général un centre de masse relativement haut en comparaison avec leur surface de contact avec le sol. 
+  Ainsi, la moindre accélération des corps du robot induit une large variation de la répartition des forces de contact avec le sol.
+  Si celles-ci ne sont pas correctement contrôlées, alors le robot peut tomber.
+  De plus, le robot disposant d'une base mobile à roues, une perturbation peut l'amener aisément à basculer sur deux roues.
+  Enfin, un intérêt particulier a été apporté à la réalisation d'une commande temps-réel implémentée sur le système embarqué du robot.
+  Cela implique principalement des contraintes concernant le temps de calcul de la loi de commande.
+  
+  Afin de répondre à ces problèmes, deux modèles linéaires du robot ont été réalisés.
+  Le premier permet de modéliser la dynamique du robot lorsque celui-ci possède toutes ses roues en contact avec le sol.
+  Le second permet de modéliser la dynamique du robot lorsque celui-ci bascule sur deux de ses roues.
+  Ces modèles ont été réalisés en prenant en compte la répartition massique du robot. 
+  Ainsi, il a été judicieux de le modéliser comme un système à deux masses ponctuelles, pouvant se déplacer sur un plan parallèle au sol. 
+  La première correspond au centre de masse de la base mobile, la seconde à celui du reste du robot.
+  
+  Ces modèles sont ensuite utilisés au sein de deux commandes prédictives, permettant de prendre en compte à chaque instant les contraintes dynamiques ainsi que le comportement du robot dans le futur.
+  La première commande permet de contrôler les déplacements du robot lorsque celui-ci possède toutes ses roues en contact avec le sol, lui assurant de ne pas basculer.
+  La seconde permet au robot de se rattraper d'une situation où une perturbation l'amène à basculer, afin de ramener toutes ses roues en contact avec le sol.
+ 
+  Aussi, un superviseur disposant d'une machine à état à été réalisé afin de définir quelle loi de commande doit être exécutée à chaque instant.
+  Ce superviseur utilise les capteurs disponibles sur le robot afin d'observer l'état de basculement du robot.
+  
+  Enfin, afin de valider expérimentalement le résultat des développements de cette thèse, une série d'expériences a été présentée, mettant en évidence les différents aspects de la loi de commande.
+  Notamment, des essais ont été réalisés concernant le suivi de trajectoires non physiquement réalisables, le rejet de perturbations appliqués à la base mobile, 
+  la stabilisation du robot lors de son basculement, ainsi que la compensation de variations de l'inclinaison du sol.
+  
+  
+\section{Résumé en Anglais}
+
+\section{Résumé vulgarisé en Français}
+
+  L'objectif de cette thèse est de contrôler les déplacements et l'équilibre d'un robot humanoïde.
+  Ce robot ne possède pas de pieds mais d'une jambe reliée à une base mobile à roues.
+  
+  Le premier problème lié à ce type de robots est qu'ils possèdent un centre de masse haut en comparaison de la taille de leur base mobile.
+  De ce fait, des mouvements rapides peuvent facilement amener le robot à basculer.
+  De plus, le robot disposant d'une base à roues, une perturbation adéquate peut aisément le faire basculer.
+  
+  Afin de répondre à ces problèmes, il a été développé dans cette thèse une loi de commande permettant de contrôler simultanément le corps du robot et la base mobile.
+  Afin de permettre des mouvements rapides, cette loi de commande permet de prédire le comportement du robot dans le futur, en utilisant un modèle simple.
+  Aussi, cette loi de commande permet également au robot de rattraper un basculement lorsque celui-ci est observé.
+  
+  Enfin, des expériences sur le robot ont été réalisées afin de valider la loi de commande décrite au cours de la thèse, portant notamment sur le suivi de trajectoires non réalisables,
+  la compensation de montée de pente, et l'adaptation à des perturbations.
+  
+  
+  
+
+\section{Résumé vulgarisé en Anglais}
 
 
-On considère que la stabilité interne est assurée si les variables $\dddot{C}$ ne divergent pas.
-
-On considère que la stabilité externe est assurée si les contraintes sont respectées (problème solvable) et si la valeur de la fonction objectif ne diverge pas.
-
-Dans ce problème simple, la solution du problème de minimisation est toujours aux bornes des contraintes, où la fonction objectif est minimale :
-\eq{
-	O(\dddot{C})_{\min}=n \iff C_{opt}=\mat{1\\-1\\1\\-1\\1} 
-}
-
-La solution est directement :
-\eqa{
-	\dddot{C}_{opt} &= U^{-1}C_{opt}\\
-	\dddot{C}_{opt} &= \frac{6}{T^3}\mat{
-		1 & 0 & 0 & 0 & 0 \\
-		-4 & 1 & 0 & 0 & 0 \\
-		9 & -4 & 1 & 0 & 0 \\
-		-27 & 9 & -4 & 1 & 0 \\
-		84 & -27 & 9 & -4 & 1
-	}
-	\mat{1\\-1\\1\\-1\\1} \\
-	\dddot{C}_{opt} &= \frac{6}{T^3}\mat{1\\-5\\14\\-41\\125}
-}
-
-Dans ce problème, la stabilité externe est assurée (solution respectant les contraintes, et fonction objectif minimale). Cependant, la stabilité interne ne l'est pas, car les $\dddot{c}_{opt}$ tendent vers l'infini.
-
-En ajoutant un second objectif de minimisation du jerk $\dddot{C}$, l'importance relative de celui-ci par rapport au suivi de la trajectoire $c^*$ va faire en sorte que $\dddot{C}$ ne divergera pas :
-\liste{
-	\item Lorsque le jerk est faible, le suivi de trajectoire est prépondérant devant la minimisation du jerk. Le jerk grandit alors, et la valeur de l'objectif de suivi de trajectoire va diminuer vers son minimum.
-	\item Lorsque le jerk devient grand, la minimisation du jerk est prépondérant devant le suivi de trajectoire. Le jerk va donc diminuer, et la valeur de l'objectif de suivi trajectoire va augmenter.
-}
-
-La valeur de l'objectif de suivi de trajectoire va donc soit suivre un cycle, soit se stabiliser. Le jerk quant à lui sera limité en fonction du choix du jeu de pondérations pour les deux objectifs.
 \end{document}
